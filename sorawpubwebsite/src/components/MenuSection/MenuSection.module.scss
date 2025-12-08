@@ -1,0 +1,361 @@
+// MenuSection.module.scss
+
+$primary: #953513;
+$text-cream: #e0d5bb;
+$bg-dark: #001a13;
+$gold: #a48d29;
+$secondary: #b75b39;
+
+.menuSection {
+  background-color: $bg-dark;
+  color: $text-cream;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.splitLayout {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+// --- LEFT COLUMN ---
+.leftColumn {
+  width: 55%;
+  height: 100%;
+  overflow-y: auto;
+  padding: 6rem 4rem 2rem 4rem;
+  position: relative;
+  z-index: 2;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $primary;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  @media (max-width: 1024px) {
+    width: 100%;
+    padding: 6rem 1.5rem 8rem 1.5rem;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+// --- RIGHT COLUMN ---
+.rightColumn {
+  width: 45%;
+  height: 100%;
+  position: relative;
+  border-left: 1px solid rgba($text-cream, 0.1);
+  background: #000;
+
+  @media (max-width: 1024px) {
+    display: none; // Nascosto su mobile
+  }
+}
+
+.imageFrame {
+  width: 100%;
+  height: 100%;
+  position: relative;
+
+  .previewImg {
+    object-fit: cover;
+    animation: zoomPulse 20s infinite alternate;
+    animation: fadeImg 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+
+  .overlayGradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, $bg-dark 0%, transparent 40%);
+  }
+}
+
+// --- HEADER & CATEGORIES ---
+.header {
+  margin-bottom: 2rem;
+
+  .subtitle {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: $primary;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  h2 {
+    font-family: serif;
+    font-size: 4rem;
+    font-weight: 400;
+    margin: 0;
+    color: $text-cream;
+    line-height: 1;
+
+    @media (max-width: 768px) {
+      font-size: 3rem;
+    }
+  }
+}
+
+.categoryWrapper {
+  display: flex;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  position: sticky;
+  top: 0;
+  background: rgba($bg-dark, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 1rem 0;
+  z-index: 10;
+  border-bottom: 1px solid rgba($text-cream, 0.1);
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.categoryBtn {
+  background: transparent;
+  border: 1px solid rgba($text-cream, 0.2);
+  color: rgba($text-cream, 0.6);
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  &:hover {
+    border-color: $text-cream;
+    color: $text-cream;
+  }
+
+  &.active {
+    background: $primary;
+    border-color: $primary;
+    color: white;
+    box-shadow: 0 4px 15px rgba($primary, 0.4);
+  }
+}
+
+// --- MENU ITEMS ---
+.menuList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.menuItem {
+  cursor: pointer;
+  position: relative;
+  padding: 1rem;
+  border-radius: 8px;
+  transition: background 0.2s;
+  border-bottom: 1px solid rgba($text-cream, 0.05);
+
+  &:active {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  // Feedback tocco mobile
+
+  @media (min-width: 1025px) {
+    &:hover {
+      background: rgba(255, 255, 255, 0.03);
+      transform: translateX(0px);
+
+      .itemName {
+        color: $gold;
+      }
+
+      .line {
+        opacity: 0.5;
+      }
+    }
+  }
+
+  .itemMain {
+    position: relative;
+    z-index: 1;
+  }
+
+  .namePriceRow {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    width: 100%;
+  }
+
+  // Gruppo Nome + Icona Mobile
+  .nameGroup {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; // Spazio tra nome e icona
+  }
+
+  .itemName {
+    font-family: serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: $text-cream;
+    margin: 0;
+    transition: color 0.3s;
+
+    @media (max-width: 768px) {
+      font-size: 1.2rem;
+    }
+  }
+
+  // --- ICONA FOTOCAMERA MOBILE ---
+  .mobilePhotoIcon {
+    display: flex;
+    align-items: center;
+    color: $gold;
+
+    svg {
+      width: 18px;
+      height: 18px;
+      opacity: 0.8;
+    }
+
+    // NASCONDI SU DESKTOP (Importante!)
+    @media (min-width: 1025px) {
+      display: none;
+    }
+  }
+
+  .line {
+    flex-grow: 1;
+    margin: 0 1rem;
+    height: 1px;
+    background: rgba($text-cream, 0.15);
+    opacity: 0.3;
+    transition: all 0.3s;
+
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+
+  .price {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: $secondary;
+    font-family: monospace;
+  }
+
+  .description {
+    font-size: 0.95rem;
+    color: rgba($text-cream, 0.6);
+    margin: 0;
+    max-width: 90%;
+    line-height: 1.5;
+  }
+}
+
+.spacer {
+  height: 100px;
+}
+
+// --- MODAL MOBILE ---
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modalContent {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.modalImg {
+  position: relative !important;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  border-radius: 16px;
+  border: 1px solid $primary;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.closeBtn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid $text-cream;
+  color: $text-cream;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+@keyframes fadeImg {
+  from {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes zoomPulse {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,47 @@
+// Home.module.scss
+
+// --- Main Container ---
+.snapContainer {
+  height: 100vh;
+  width: 100%;
+  overflow-y: scroll;         // Must be scrollable to snap
+  scroll-snap-type: y mandatory; // Enforce snap
+  scroll-behavior: smooth;
+
+  // IMPORTANT: Fix for Safari/Mobile to ensure smooth momentum scrolling
+  -webkit-overflow-scrolling: touch; 
+
+  // Hide Scrollbar
+  scrollbar-width: none;  // Firefox
+  &::-webkit-scrollbar { 
+    display: none;        // Chrome/Safari
+  }
+}
+
+// Home.module.scss
+
+.section {
+  height: 100vh;
+  width: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  position: relative;
+  
+  // Modifica importante per gestire il mobile
+  overflow: hidden; 
+
+  @media (max-width: 768px) {
+    // Su mobile, se il contenuto sfora (come il Bento), permetti lo scroll interno
+    overflow-y: auto; 
+  }
+}
+
+// Home.module.scss
+
+// Permette alla sezione del menu di scrollare internamente se la lista è lunga
+.menuScrollable {
+  overflow-y: auto; 
+  // Stile scrollbar personalizzato (opzionale)
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-thumb { background: #953513; border-radius: 4px; }
+}

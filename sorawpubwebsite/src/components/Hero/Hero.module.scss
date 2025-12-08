@@ -1,0 +1,271 @@
+// Hero.module.scss
+
+// --- Variabili Palette ---
+$text-cream: #e0d5bb;
+$primary-rust: #953513;
+
+.hero {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+}
+
+// --- VIDEO BACKGROUND ---
+.videoBackground {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; // Copre tutto lo schermo senza deformarsi
+    z-index: 0;
+}
+
+// --- DARK OVERLAY (Il filtro scuro) ---
+.darkOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    // Regola qui l'opacità (0.6 = 60% scuro)
+    background: rgba(10, 5, 5, 0.6);
+    z-index: 1;
+}
+
+// --- CONTENITORE CONTENUTO ---
+.contentContainer {
+    position: relative;
+    z-index: 2; // Sopra al video e all'overlay
+    max-width: 800px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 1rem;
+
+    // p {
+    //     font-size: clamp(1rem, 2.5vw, 1.25rem);
+    //     color: rgba($text-cream, 0.95);
+    //     margin: 0;
+    //     max-width: 600px;
+    //     font-weight: 300;
+    //     letter-spacing: 0.5px;
+    //     line-height: 1.6;
+
+    //     // Animazione entrata soft
+    //     opacity: 0;
+    //     transform: translateY(20px);
+    //     animation: contentFadeUp 1s ease-out forwards;
+    //     animation-delay: 0.2s;
+    // }
+}
+
+// --- CONTENITORE PULSANTI ---
+.ctaContainer {
+    position: absolute;
+    width: max-content;
+    bottom: 25%;
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    opacity: 0;
+    transform: translateY(20px);
+    animation: contentFadeUp 1s ease-out forwards;
+    animation-delay: 0.6s;
+}
+
+// --- STILI BOTTONI (Invariati) ---
+.btn {
+    position: relative;
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-decoration: none;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    border-radius: 50px;
+    z-index: 1;
+}
+
+.btnPrimary {
+    color: #fff;
+    border: 1px solid $primary-rust;
+    background: rgba($primary-rust, 0.8);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+        z-index: -1;
+    }
+
+    &:hover {
+        background: $primary-rust;
+        box-shadow: 0 10px 25px rgba($primary-rust, 0.4);
+
+        &::before {
+            left: 100%;
+        }
+    }
+}
+
+.btnSecondary {
+    color: $text-cream;
+    border: 1px solid $text-cream;
+    background: transparent;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0%;
+        height: 100%;
+        background: $text-cream;
+        transition: width 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        z-index: -1;
+    }
+
+    &:hover {
+        color: #140a0a;
+        border-color: $text-cream;
+
+        &::before {
+            width: 100%;
+        }
+    }
+}
+
+// --- SCROLL INDICATOR ---
+.scrollIndicator {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    // Qui non usiamo translate nell'hover per evitare conflitti con l'animazione di entrata
+    // Gestiamo la posizione fissa qui:
+    transform: translateX(-50%);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    z-index: 10;
+
+    opacity: 0;
+    animation: fadeReveal 1s ease-out forwards;
+    animation-delay: 1.2s;
+
+    &:hover {
+        opacity: 1;
+        // Modifichiamo solo Y, mantenendo X fisso
+        transform: translateX(-50%) translateY(5px);
+    }
+}
+
+.mouse {
+    width: 30px;
+    height: 50px;
+    border: 2px solid $text-cream;
+    border-radius: 20px;
+    position: relative;
+}
+
+.wheel {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 8px;
+    background-color: $text-cream;
+    border-radius: 2px;
+    animation: scrollWheel 2s infinite;
+}
+
+.arrow {
+    width: 10px;
+    height: 10px;
+    border-right: 2px solid $text-cream;
+    border-bottom: 2px solid $text-cream;
+    transform: rotate(45deg);
+    margin-top: -5px;
+    animation: arrowFade 2s infinite;
+    animation-delay: 1s;
+}
+
+// --- KEYFRAMES ---
+
+@keyframes contentFadeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+        filter: blur(5px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+@keyframes fadeReveal {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 0.8;
+    }
+}
+
+@keyframes scrollWheel {
+    0% {
+        opacity: 1;
+        top: 8px;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        top: 25px;
+    }
+}
+
+@keyframes arrowFade {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}

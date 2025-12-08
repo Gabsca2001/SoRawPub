@@ -1,0 +1,182 @@
+// HomeNavbar.module.scss
+
+// --- Palette presa dalla tua foto ---
+$text-cream: #e0d5bb;      // Il colore del logo "So Raw"
+$rust-corten: #953513;     // Il colore del bancone
+$bg-dark: rgba(15, 10, 10, 0.85); // Nero caldo, quasi opaco
+$blur: 10px;
+
+// --- Navbar Principale ---
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5rem; // Altezza fissa elegante
+  z-index: 1000;
+  transition: all 0.3s ease;
+
+  // Sfondo "Matte" (Opaco ma trasparente)
+  background: $bg-dark;
+  backdrop-filter: blur($blur); // Sfocatura leggera dello sfondo dietro
+  -webkit-backdrop-filter: blur($blur);
+  
+  // IL TOCCO DI CLASSE: Bordo inferiore color Corten (come il bancone)
+  border-bottom: 1px solid rgba($rust-corten, 0.4);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); // Ombra morbida
+}
+
+.container {
+  max-width: 1400px; // Largo ma contenuto
+  margin: 0 auto;
+  padding: 0 2rem;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+// --- Logo (Integrato e composto) ---
+.logoContainer {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  z-index: 1002; // Sopra al menu mobile
+
+  a {
+    display: flex;
+    align-items: center;
+  }
+
+  img {
+    height: 3rem; // Dimensione bilanciata
+    width: auto;
+    transition: transform 0.3s ease;
+    
+    // Leggera ombra per staccarlo
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+
+    @media (min-width: 768px) {
+      height: 3.5rem; 
+    }
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
+// --- Menu Desktop (Minimal & Clean) ---
+.desktopMenu {
+  display: none;
+  gap: 3rem; // Molto spazio tra le parole per eleganza
+  align-items: center;
+
+  @media (min-width: 768px) {
+    display: flex;
+  }
+
+  a {
+    text-decoration: none;
+    color: $text-cream;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 2px; // Spaziatura lettere stile "Luxury"
+    position: relative;
+    transition: color 0.3s ease;
+    padding: 0.5rem 0;
+
+    // Linea Corten che appare sotto all'hover
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background-color: $rust-corten;
+      transition: width 0.3s ease;
+    }
+
+    &:hover {
+      color: #fff;
+      &::after {
+        width: 100%; // La linea si allunga
+      }
+    }
+  }
+}
+
+// --- Hamburger Button (Minimal) ---
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end; // Allineato a destra
+  gap: 6px; // Spazio tra le linee
+  width: 2.5rem;
+  height: 2.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1002;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+
+  span {
+    display: block;
+    height: 2px;
+    background: $text-cream;
+    transition: all 0.3s ease;
+  }
+
+  // Linee di lunghezza diversa per stile "architettonico"
+  span:nth-child(1) { width: 2rem; }
+  span:nth-child(2) { width: 1.5rem; }
+  span:nth-child(3) { width: 2rem; }
+}
+
+// --- Mobile Menu (Fullscreen Semplice) ---
+.mobileMenu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #100a0a; // Fondo scuro solido
+  z-index: 1001;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2.5rem;
+
+  // Animazione semplice fade-in
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+
+  &.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  a {
+    text-decoration: none;
+    color: $text-cream;
+    font-size: 1.8rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    transition: color 0.3s;
+
+    &:hover {
+      color: $rust-corten; // Diventa ruggine all'hover
+    }
+  }
+}
