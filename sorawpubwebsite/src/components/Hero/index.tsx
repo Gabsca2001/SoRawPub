@@ -1,4 +1,5 @@
 import styles from './Hero.module.scss';
+import Link from 'next/link';
 
 export default function Hero() {
 
@@ -35,9 +36,9 @@ export default function Hero() {
                     <a href="/prenota" className={`${styles.btn} ${styles.btnPrimary}`}>
                         Prenota Ora
                     </a>
-                    <a href="#menu" className={`${styles.btn} ${styles.btnSecondary}`}>
+                    <Link href="/menu" className={`${styles.btn} ${styles.btnSecondary}`}>
                         Scopri Menu
-                    </a>
+                    </Link>
                 </div>
 
             </div>

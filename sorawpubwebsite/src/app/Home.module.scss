@@ -38,17 +38,3 @@
     overflow-y: auto; 
   }
 }
-
-// Home.module.scss
-
-// Permette alla sezione del menu di scrollare internamente se la lista è lunga
-.menuScrollable {
-  overflow-y: auto; 
-  touch-action: pan-y;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-  padding-top: 0 !important;
-  // Stile scrollbar personalizzato (opzionale)
-  &::-webkit-scrollbar { width: 4px; }
-  &::-webkit-scrollbar-thumb { background: #953513; border-radius: 4px; }
-}

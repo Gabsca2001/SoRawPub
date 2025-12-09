@@ -1,5 +1,3 @@
-// MenuSection.module.scss
-
 $primary: #953513;
 $text-cream: #e0d5bb;
 $bg-dark: #001a13;
@@ -10,38 +8,47 @@ $secondary: #b75b39;
   background-color: $bg-dark;
   color: $text-cream;
   width: 100%;
-  height: 100%;
+  height: 100vh;        // pagina di menu a tutta altezza
   position: relative;
-  overflow: hidden;
+  overflow: hidden;     // niente scroll sul container: scrolliamo dentro la colonna sinistra
+
+  @media (max-width: 1024px) {
+    padding: 0.5rem;
+    margin: 0;
+  }
+
 }
 
+// LAYOUT A DUE COLONNE
 .splitLayout {
   display: flex;
   width: 100%;
   height: 100%;
+  padding: 0 2rem;      // 🔥 meno margine esterno rispetto ai 4rem di prima
+  gap: 2rem;            // 🔥 spazio tra colonna sinistra e destra
+
+  @media (max-width: 1024px) {
+    padding: 0;
+    gap: 0;
+  }
 }
 
 // --- COLONNA SINISTRA ---
 .leftColumn {
   width: 55%;
   height: 100%;
-  overflow-y: auto;
-
-  // FIX STICKY 1: Rimuoviamo il padding-top dal contenitore!
-  // Prima era '6rem 4rem ...'. Ora è 0 sopra.
-  // Manteniamo il padding laterale e inferiore.
-  padding: 0 4rem 2rem 4rem;
-
+  overflow-y: auto;      // 🔥 QUI ora lo scrolla il menu!
+  padding: 0 0 2.5rem 0;
   position: relative;
   z-index: 2;
 
   &::-webkit-scrollbar {
-    width: 4px;
+    width: 2px;
   }
 
   &::-webkit-scrollbar-thumb {
     background: $primary;
-    border-radius: 4px;
+    border-radius: 2px;
   }
 
   &::-webkit-scrollbar-track {
@@ -50,8 +57,7 @@ $secondary: #b75b39;
 
   @media (max-width: 1024px) {
     width: 100%;
-    // Anche su mobile, padding-top a 0
-    padding: 0 1.5rem 8rem 1.5rem;
+    height: auto;
     -webkit-overflow-scrolling: touch;
   }
 }
@@ -60,11 +66,7 @@ $secondary: #b75b39;
 .header {
   text-align: center;
   margin-bottom: 1.5rem;
-
-  // FIX STICKY 2: Aggiungiamo lo spazio qui!
-  // Questo spinge il contenuto giù inizialmente per non finire sotto la Navbar,
-  // ma essendo dentro lo scroll, scorre via e lascia passare la barra sticky.
-  padding-top: 7rem; // 7rem = spazio Navbar + un po' di aria
+  padding-top: 4rem; // spazio dalla navbar
 
   .subtitle {
     font-size: 0.85rem;
@@ -97,20 +99,13 @@ $secondary: #b75b39;
   flex-wrap: nowrap;
   overflow-x: auto;
 
-  // FIX STICKY 3: Ora top: 0 toccherà davvero il bordo superiore
   position: sticky;
-  top: 0;
+  top: 0;               // attaccato in alto alla colonna sinistra
   z-index: 20;
-
   background: $bg-dark;
 
-  // Margini negativi per estendersi lateralmente sopra il padding di .leftColumn
-  margin-left: -4rem;
-  margin-right: -4rem;
-
-  // Padding interno per riallineare i bottoni
-  padding: 1rem 4rem;
-
+  // niente più margini negativi: usiamo i 2rem di padding di .splitLayout
+  padding: 1rem 0;
   border-bottom: 1px solid rgba($text-cream, 0.1);
   scrollbar-width: none;
 
@@ -118,28 +113,16 @@ $secondary: #b75b39;
     display: none;
   }
 
-  // Adattamento Mobile
   @media (max-width: 1024px) {
-    margin-left: -1.5rem;
-    margin-right: -1.5rem;
-    padding: 1rem 1.5rem;
-    // Su mobile la navbar potrebbe essere più piccola o diversa, ma top:0 va bene
+    padding: 1rem 0;
     top: 0;
   }
 }
 
-// ... (Il resto del codice rimane identico: .categoryBtn, .menuList, ecc.) ...
-
 .categoryBtn {
   background: transparent;
-  
-  // MODIFICA 1: Aumenta contrasto bordo inattivo
-  border: 1px solid rgba($text-cream, 0.35); // Era 0.2
-  
-  // MODIFICA 2: Testo leggermente più brillante
-  color: rgba($text-cream, 0.85); // Era 0.6
-  
-  // ... resto invariato
+  border: 1px solid rgba($text-cream, 0.35);
+  color: rgba($text-cream, 0.85);
   padding: 0.6rem 1.2rem;
   border-radius: 50px;
   font-size: 0.9rem;
@@ -153,22 +136,13 @@ $secondary: #b75b39;
   &:hover {
     border-color: $text-cream;
     color: $text-cream;
-    // Opzionale: aggiungi un leggerissimo sfondo al hover inattivo per feedback
     background: rgba($text-cream, 0.05);
-  }
-
-  @media (hover: hover) {
-    &:hover {
-      border-color: $text-cream;
-      color: $text-cream;
-    }
   }
 
   &.active {
     background: $primary;
     border-color: $primary;
-    color: white; // Bianco puro per massimo contrasto
-    // Il resto è perfetto
+    color: white;
     box-shadow: 0 4px 15px rgba($primary, 0.4);
   }
 }
@@ -189,7 +163,7 @@ $secondary: #b75b39;
 
   @media (hover: hover) {
     &:hover {
-      background: rgba(255, 255, 255, 0.03); 
+      background: rgba(255, 255, 255, 0.03);
       .itemName { color: $gold; }
       .line { opacity: 0.5; }
     }
@@ -203,20 +177,6 @@ $secondary: #b75b39;
 
   &:active {
     background: rgba(255, 255, 255, 0.05);
-  }
-
-  @media (min-width: 1025px) {
-    &:hover {
-      background: rgba(255, 255, 255, 0.03);
-
-      .itemName {
-        color: $gold;
-      }
-
-      .line {
-        opacity: 0.5;
-      }
-    }
   }
 
   .itemMain {
@@ -296,54 +256,11 @@ $secondary: #b75b39;
   }
 }
 
-.nextSectionHint {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 3rem; // Stacca dall'ultimo elemento del menu
-  cursor: pointer;
-  opacity: 0.7;
-  transition: opacity 0.3s;
-  padding: 1rem;
-
-  &:hover {
-    opacity: 1;
-    .hintArrow { color: $primary; }
-  }
-
-  .hintText {
-    font-family: monospace; // O il tuo font tecnico
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: $text-cream;
-  }
-
-  .hintArrow {
-    color: $text-cream;
-    width: 24px;
-    height: 24px;
-    transition: color 0.3s;
-    // Animazione rimbalzo
-    animation: bounce 2s infinite;
-
-    svg {
-      width: 100%;
-      height: 100%;
-    }
-  }
-
-  // Nascondilo su schermi molto grandi se non serve (opzionale)
-  @media (min-width: 1400px) { display: none; }
-}
-
 .spacer {
-  height: 50px;
+  height: 60px;
 }
 
-// COLONNA DESTRA (Invariata)
+// --- COLONNA DESTRA (Preview) ---
 .rightColumn {
   width: 45%;
   height: 100%;
@@ -363,8 +280,7 @@ $secondary: #b75b39;
 
   .previewImg {
     object-fit: cover;
-    animation: zoomPulse 20s infinite alternate;
-    animation: fadeImg 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation: zoomPulse 20s infinite alternate, fadeImg 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   }
 
   .overlayGradient {
@@ -374,7 +290,7 @@ $secondary: #b75b39;
   }
 }
 
-// MODAL & ANIMATIONS (Invariati)
+// --- MODAL MOBILE ---
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -427,34 +343,61 @@ $secondary: #b75b39;
   margin-top: 1rem;
 }
 
-@keyframes fadeImg {
-  from {
-    opacity: 0;
-    transform: scale(1.05);
-  }
+.backRow {
+  padding-top: 2rem;
+  margin-bottom: 0.5rem;
 
-  to {
-    opacity: 1;
-    transform: scale(1);
+  @media (max-width: 1024px) {
+    padding-top: 1.5rem;
   }
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: rgba($text-cream, 0.7);
+  text-decoration: none;
+  border-radius: 999px;
+  border: 1px solid rgba($text-cream, 0.25);
+  padding: 0.45rem 1.2rem;
+  transition: all 0.2s ease;
+  background: rgba(0, 0, 0, 0.2);
+
+  &:hover {
+    color: $text-cream;
+    border-color: $text-cream;
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateX(-2px);
+  }
+}
+
+.backIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+
+@keyframes fadeImg {
+  from { opacity: 0; transform: scale(1.05); }
+  to   { opacity: 1; transform: scale(1); }
 }
 
 @keyframes zoomPulse {
-  from {
-    transform: scale(1);
-  }
-
-  to {
-    transform: scale(1.05);
-  }
+  from { transform: scale(1); }
+  to   { transform: scale(1.05); }
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
