@@ -1,93 +1,109 @@
-import Image from 'next/image';
+'use client';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import styles from './Footer.module.scss';
 
 export function Footer() {
-    const currentYear = new Date().getFullYear();
+    const [year, setYear] = useState(2024);
+
+    useEffect(() => {
+        setYear(new Date().getFullYear());
+    }, []);
 
     return (
         <footer className={styles.footer}>
             <div className={styles.container}>
                 
-                {/* 1. TOP SECTION: CTA & BIG LOGO */}
-                <div className={styles.topSection}>
-                    <div className={styles.ctaBox}>
-                        <h2 className={styles.ctaTitle}>Ready to taste?</h2>
-                        <Link href="/prenota" className={styles.ctaBtn}>
-                            Prenota un Tavolo
-                        </Link>
+                {/* INTESTAZIONE: Logo e CTA */}
+                <div className={styles.headerRow}>
+                    <div className={styles.logoBlock}>
+                        <h2 className={styles.logoText}>SO RAW</h2>
+                        <span className={styles.logoSub}>COCKTAIL & VIBES</span>
                     </div>
-                    <div className={styles.bigLogoText}>SO RAW</div>
+                    <Link href="/prenota" className={styles.reserveBtn}>
+                        Prenota Tavolo
+                    </Link>
                 </div>
 
-                {/* 2. GRID SECTION: INFO */}
-                <div className={styles.gridInfo}>
+                {/* GRIGLIA PRINCIPALE */}
+                <div className={styles.gridWrapper}>
                     
-                    {/* COL 1: LOGO & ABOUT */}
-                    <div className={styles.col}>
-                        <div className={styles.brand}>
-                            <Image 
-                                src="/logo-desktop-png.png" 
-                                alt="So Raw Pub Logo" 
-                                width={80} 
-                                height={80} 
-                                className={styles.logoImg}
-                            />
-                            <p className={styles.payoff}>
-                                Cocktails, Food &<br/> Good Vibes in Sicily.
-                            </p>
+                    {/* BLOCCO 1: DOVE SIAMO + MAPPA */}
+                    <div className={styles.gridCol}>
+                        <h3 className={styles.colTitle}>Location</h3>
+                        <div className={styles.locationBox}>
+                            <address>
+                                Piazza Giuseppe Verdi 12<br />
+                                90047 Partinico (PA)
+                            </address>
+                            {/* Riquadro Mappa Integrato */}
+                            <div className={styles.miniMap}>
+                                <iframe 
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3143.238647764128!2d13.1189!3d38.0416!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzjCsDAyJzI5LjgiTiAxM8KwMDcnMDguMCJF!5e0!3m2!1sit!2sit!4v1600000000000!5m2!1sit!2sit" 
+                                    width="100%" 
+                                    height="100%" 
+                                    style={{ border: 0 }} 
+                                    allowFullScreen 
+                                    loading="lazy" 
+                                    referrerPolicy="no-referrer-when-downgrade"
+                                ></iframe>
+                            </div>
+                            <a 
+                                href="https://goo.gl/maps/..." 
+                                target="_blank" 
+                                className={styles.mapLink}
+                            >
+                                Ottieni indicazioni →
+                            </a>
                         </div>
                     </div>
 
-                    {/* COL 2: NAVIGATION */}
-                    <div className={styles.col}>
-                        <h4 className={styles.colTitle}>Esplora</h4>
+                    {/* BLOCCO 2: CONTATTI & ORARI */}
+                    <div className={styles.gridCol}>
+                        <div className={styles.infoGroup}>
+                            <h3 className={styles.colTitle}>Contatti</h3>
+                            <Link href="tel:+390911234567" className={styles.infoLink}>+39 091 123 4567</Link>
+                            <Link href="mailto:info@sorawpub.com" className={styles.infoLink}>info@sorawpub.com</Link>
+                        </div>
+                        
+                        <div className={styles.infoGroup}>
+                            <h3 className={styles.colTitle}>Opening Hours</h3>
+                            <ul className={styles.hours}>
+                                <li><span>Lun - Gio</span> 18:00 — 01:00</li>
+                                <li><span>Ven - Dom</span> 18:00 — 02:00</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    {/* BLOCCO 3: NAVIGAZIONE & SOCIAL */}
+                    <div className={`${styles.gridCol} ${styles.navCol}`}>
+                        <h3 className={styles.colTitle}>Menu</h3>
                         <nav className={styles.navLinks}>
                             <Link href="/">Home</Link>
-                            <Link href="/menu">Menu</Link>
+                            <Link href="/menu">Food & Drinks</Link>
                             <Link href="/events">Eventi</Link>
-                            <Link href="/chi-siamo">Chi Siamo</Link>
+                            <Link href="/chi-siamo">Philosophy</Link>
                         </nav>
-                    </div>
-
-                    {/* COL 3: CONTACTS */}
-                    <div className={styles.col}>
-                        <h4 className={styles.colTitle}>Contatti</h4>
-                        <address className={styles.address}>
-                            <p>Piazza Giuseppe Verdi 12</p>
-                            <p>90047 Partinico (PA)</p>
-                            <Link href="tel:+390911234567" className={styles.contactLink}>
-                                +39 091 1234567
-                            </Link>
-                            <Link href="mailto:info@sorawpub.com" className={styles.contactLink}>
-                                info@sorawpub.com
-                            </Link>
-                        </address>
-                    </div>
-
-                    {/* COL 4: HOURS & SOCIAL */}
-                    <div className={styles.col}>
-                        <h4 className={styles.colTitle}>Orari</h4>
-                        <ul className={styles.hoursList}>
-                            <li><span>Lun - Gio:</span> 18:00 - 01:00</li>
-                            <li><span>Ven - Dom:</span> 18:00 - 02:00</li>
-                        </ul>
-                        <div className={styles.socials}>
-                            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">IG</a>
-                            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">FB</a>
-                            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">TW</a>
+                        
+                        <div className={styles.socialGroup}>
+                            <h3 className={styles.colTitle}>Follow Us</h3>
+                            <div className={styles.socialLinks}>
+                                <a href="#">Instagram</a>
+                                <a href="#">Facebook</a>
+                            </div>
                         </div>
                     </div>
 
                 </div>
 
-                {/* 3. BOTTOM BAR */}
-                <div className={styles.bottomBar}>
-                    <p>&copy; {currentYear} So Raw Pub. P.IVA 1234567890</p>
-                    <div className={styles.credits}>
-                        <span>Designed by </span>
-                        <a href="#" className={styles.devLink}>Gabriele Scamardo</a>
-                    </div>
+                {/* BOTTOM BAR */}
+                <div className={styles.bottomRow}>
+                    <p suppressHydrationWarning className={styles.copy}>
+                        © {year} So Raw Pub • P.IVA <span>123</span> <span>456</span> <span>789</span>
+                    </p>
+                    <p className={styles.credits}>
+                        Dev by <a href="#">Gabriele Scamardo</a>
+                    </p>
                 </div>
 
             </div>

@@ -1,6 +1,6 @@
 // BentoSection.module.scss
 
-// --- Palette ---
+// --- Palette Colori ---
 $primary: #953513;
 $secondary: #b75b39;
 $third: #b38c65;
@@ -9,16 +9,16 @@ $fifth: #a48d29;
 $sixth: #001a13;
 $seventh: #3f815c;
 
-// --- CONFIGURAZIONE SLIDE ---
+// --- CONFIGURAZIONE SLIDE (Scroll Snap) ---
 .bentoSlide {
   width: 100%;
-  height: 100vh; // Forza l'altezza schermo intero
+  height: 100vh; // Altezza fissa per lo snap
   margin: 0;
   padding: 0;
   background: $sixth;
   position: relative;
 
-  // LOGICA SNAP: Ogni slide si aggancia allo scroll
+  // Logica Snap
   scroll-snap-align: start;
   scroll-snap-stop: always;
   overflow: hidden;
@@ -27,23 +27,24 @@ $seventh: #3f815c;
 .gridContainer {
   display: grid;
   width: 100%;
-  height: 100%; // Occupa tutto il 100vh
+  height: 100%; // Occupa tutto il 100vh del genitore
 
-  // DESKTOP: 4 Colonne x 2 Righe esatte (50% altezza l'una)
+  // DESKTOP: 4 Colonne x 2 Righe (50% altezza ciascuna)
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: 1fr 1fr;
 
-  gap: 0;
+  gap: 0; // "Tutto pieno"
   grid-auto-flow: dense;
 
-  // --- RESPONSIVE MOBILE ---
-  // Su mobile non possiamo avere 100vh fisso perché gli elementi sono troppi
+  // --- MOBILE RESPONSIVE ---
   @media (max-width: 768px) {
-    display: flex;
-    flex-direction: column;
-    height: auto; // Lascia che scrolli
+    // Passa a 2 colonne per mettere i box piccoli affiancati
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto; // Altezza automatica basata sul contenuto
+    height: auto; // Permetti lo scroll interno se necessario
     min-height: 100vh;
     overflow-y: auto;
+    display: grid;
   }
 }
 
@@ -53,13 +54,12 @@ $seventh: #3f815c;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  border: 1px solid rgba(0, 0, 0, 0.05); // Separatore sottilissimo
+  border: 1px solid rgba(0, 0, 0, 0.05); // Separatore impercettibile
 
   .image {
     object-fit: cover;
     width: 100%;
     height: 100%;
-    object-position: center;
     transition: transform 0.8s cubic-bezier(0.2, 1, 0.3, 1);
   }
 
@@ -68,7 +68,28 @@ $seventh: #3f815c;
   }
 }
 
-// --- SPANS (Helper per Desktop) ---
+// --- CLASSI DI VISIBILITÀ (La chiave per il cambio Mobile/Desktop) ---
+
+// Nasconde elementi su Mobile (es. Box vuoti o duplicati)
+.mobileHidden {
+  @media (max-width: 768px) {
+    display: none !important;
+  }
+}
+
+// Nasconde elementi su Desktop (es. Immagine Artemide nel box del Fico)
+.desktopHidden {
+  display: none !important;
+
+  @media (max-width: 768px) {
+    display: block !important;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+// --- SPANS (Helper Desktop) ---
 .col2 {
   grid-column: span 2;
 }
@@ -77,11 +98,33 @@ $seventh: #3f815c;
   grid-row: span 2;
 }
 
+// Adattamento Spans per Mobile
+// I box di testo e le immagini grandi prendono tutta la larghezza (2 colonne)
+.textCardVertical,
+.textCardHorizontal,
+.col2,
+.row2 {
+  @media (max-width: 768px) {
+    grid-column: span 2; // Full width su mobile
+    grid-row: span 1; // Altezza singola o auto
+    min-height: 350px; // Altezza minima per leggibilità
+  }
+}
+
+// I box piccoli con SVG o immagini quadrate rimangono 1 colonna (1fr)
+// grazie alla griglia 1fr 1fr definita sopra.
+.mobileCompact {
+  @media (max-width: 768px) {
+    grid-column: span 1;
+    aspect-ratio: 1/1; // Li forza quadrati
+  }
+}
+
 // --- TEXT CARDS ---
 .textCardVertical {
   background-color: $sixth;
   color: $fourth;
-  padding: 3rem;
+  padding: 2.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -89,28 +132,28 @@ $seventh: #3f815c;
 
   .decoNumber {
     font-family: serif;
-    font-size: 4rem; // Numero un po' più grande
+    font-size: 3.5rem;
     color: $primary;
     opacity: 0.5;
     line-height: 1;
-    display: block;
-    margin-bottom: 0.5rem;
   }
 
   h3 {
-    font-size: clamp(2.5rem, 5vw, 4rem); // Titolo più grande visto lo spazio extra
+    font-size: clamp(2.5rem, 5vw, 4rem);
     line-height: 0.9;
     text-transform: uppercase;
     margin-bottom: 1rem;
     color: #fff;
+    font-family: var(--font-nunito);
   }
 
   p {
-    font-size: 1.1rem;
+    font-size: 1rem;
     line-height: 1.5;
     color: rgba($fourth, 0.8);
-    // IMPORTANTE: Aumentato max-width perché ora il box è largo il doppio
     max-width: 90%;
+    font-family: var(--font-inter);
+    font-weight: 300;
   }
 
   .arrowBtn {
@@ -119,7 +162,7 @@ $seventh: #3f815c;
     border: 1px solid $fourth;
     color: $fourth;
     width: 60px;
-    height: 60px; // Bottone un po' più grande
+    height: 60px;
     border-radius: 50%;
     font-size: 1.5rem;
     cursor: pointer;
@@ -127,11 +170,17 @@ $seventh: #3f815c;
     display: flex;
     align-items: center;
     justify-content: center;
+    
 
     &:hover {
       background: $fifth;
       border-color: $fifth;
       color: $sixth;
+    }
+
+    svg {
+      width: 24px;
+      height: 24px;
     }
   }
 }
@@ -158,6 +207,10 @@ $seventh: #3f815c;
     font-weight: 500;
     font-size: 1.1rem;
     max-width: 85%;
+    line-height: 1.6;
+    font-family: var(--font-inter);
+    color: $sixth;
+    font-weight: 300;
   }
 }
 
@@ -178,10 +231,6 @@ $seventh: #3f815c;
 
   &:hover .icon {
     color: rgba(255, 255, 255, 1);
-  }
-
-  @media (max-width: 768px) {
-    min-height: 200px;
   }
 }
 

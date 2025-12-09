@@ -11,40 +11,47 @@ export default function HomeNavbar() {
         setIsOpen(!isOpen);
     };
 
-    // --- LOGICA SCROLL (Specifica per container 100vh) ---
-    useEffect(() => {
-        // Cerchiamo il contenitore che ha l'overflow-y: scroll
-        const scroller = document.getElementById('main-scroller');
+    // --- SCROLL TO SECTION FUNCTION ---
+    const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+        e.preventDefault(); // Prevent default browser anchor behavior
         
-        // Se non esiste (fallback), usiamo window
+        const scroller = document.getElementById('main-scroller');
+        const element = document.getElementById(id);
+
+        if (scroller && element) {
+            // Option A: Smooth scroll specifically within the container
+            // This calculates the top position of the element relative to the container
+            // Since sections are 100vh, this is usually just index * windowHeight
+            
+            // element.scrollIntoView works well for scroll-snap containers
+            element.scrollIntoView({ behavior: 'smooth' }); 
+        }
+        
+        setIsOpen(false); // Close mobile menu if open
+    };
+
+    // --- SCROLL LOGIC (Auto-Hide) ---
+    useEffect(() => {
+        const scroller = document.getElementById('main-scroller');
         const target = scroller || window;
 
         const controlNavbar = () => {
-            // Se è un elemento HTML prendiamo scrollTop, altrimenti scrollY
             const currentScrollY = scroller ? scroller.scrollTop : window.scrollY;
 
-            // Logica: Se scrollo giù E ho superato i 100px -> Nascondi
             if (currentScrollY > lastScrollY && currentScrollY > 100) {
                 setIsVisible(false);
             } else {
-                // Se scrollo su -> Mostra
                 setIsVisible(true);
             }
-
-            // Aggiorna l'ultima posizione conosciuta
             setLastScrollY(currentScrollY);
         };
 
-        // Aggiungiamo l'ascoltatore all'elemento specifico
         target.addEventListener('scroll', controlNavbar);
-
-        // Pulizia
         return () => {
             target.removeEventListener('scroll', controlNavbar);
         };
     }, [lastScrollY]);
 
-    // Blocca interazione background quando menu mobile è aperto
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
@@ -59,15 +66,15 @@ export default function HomeNavbar() {
         >
             <div className={styles.container}>
                 
-                {/* --- 1. LINK SINISTRA --- */}
+                {/* --- 1. LEFT LINKS --- */}
                 <nav className={styles.navGroup}>
-                    <a href="/">Home</a>
-                    <a href="/menu">Menu</a>
+                    <a href="#home" onClick={(e) => scrollToSection(e, 'home')}>Home</a>
+                    <a href="#chi-siamo" onClick={(e) => scrollToSection(e, 'chi-siamo')}>Chi Siamo</a>
                 </nav>
 
-                {/* --- 2. LOGO CENTRALE --- */}
+                {/* --- 2. LOGO --- */}
                 <div className={styles.logoCenter}>
-                    <a href="/" onClick={() => setIsOpen(false)}>
+                    <a href="#home" onClick={(e) => scrollToSection(e, 'home')}>
                         <img
                             src="/logo-desktop-png.png"
                             alt="So Raw Pub Logo"
@@ -75,13 +82,13 @@ export default function HomeNavbar() {
                     </a>
                 </div>
 
-                {/* --- 3. LINK DESTRA --- */}
+                {/* --- 3. RIGHT LINKS --- */}
                 <nav className={styles.navGroup}>
-                    <a href="/events">Eventi</a>
-                    <a href="/contact">Contatti</a>
+                    <a href="#menu" onClick={(e) => scrollToSection(e, 'menu')}>Menù</a>
+                    <a href="#contact" onClick={(e) => scrollToSection(e, 'contact')}>Contatti</a>
                 </nav>
 
-                {/* --- 4. HAMBURGER (Mobile) --- */}
+                {/* --- 4. HAMBURGER --- */}
                 <button 
                     className={styles.hamburger} 
                     onClick={toggleMenu}
@@ -93,12 +100,12 @@ export default function HomeNavbar() {
                 </button>
             </div>
 
-            {/* --- 5. MOBILE MENU FULLSCREEN --- */}
+            {/* --- 5. MOBILE MENU --- */}
             <div className={`${styles.mobileMenu} ${isOpen ? styles.open : ''}`}>
-                <a href="/" onClick={() => setIsOpen(false)}>Home</a>
-                <a href="/menu" onClick={() => setIsOpen(false)}>Menu</a>
-                <a href="/events" onClick={() => setIsOpen(false)}>Eventi</a>
-                <a href="/contact" onClick={() => setIsOpen(false)}>Contatti</a>
+                <a href="#home" onClick={(e) => scrollToSection(e, 'home')}>Home</a>
+                <a href="#chi-siamo" onClick={(e) => scrollToSection(e, 'chi-siamo')}>Chi Siamo</a>
+                <a href="#menu" onClick={(e) => scrollToSection(e, 'menu')}>Menù</a>
+                <a href="#contact" onClick={(e) => scrollToSection(e, 'contact')}>Contatti</a>
             </div>
         </header>
     );

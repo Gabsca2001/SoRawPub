@@ -20,8 +20,8 @@ const GALLERY_IMAGES: GalleryItem[] = [
     { id: 2, src: '/img2.jpeg', alt: 'Cocktail Detail', span: '' },
     { id: 3, src: '/WhatsApp Image 2025-11-28 at 15.13.50 (3).jpeg', alt: 'Artemis Illustration', span: 'tall' },
     { id: 4, src: '/img44.jpg', alt: 'Textures and Materials', span: 'wide' },
-    { id: 5, src: '/WhatsApp Image 2025-11-28 at 15.13.52 (2).jpeg', alt: 'Branding Detail', span: '' },
-    { id: 6, src: '/Screenshot 2025-12-07 190930.png', alt: 'Interior Wide Shot', span: 'wide' },
+    { id: 5, src: '/WhatsApp Image 2025-11-28 at 15.13.51 (2).jpeg', alt: 'Branding Detail', span: '' },
+    { id: 6, src: '/WhatsApp Image 2025-11-28 at 15.13.51 (2).jpeg', alt: 'Interior Wide Shot', span: 'wide' },
     { id: 7, src: '/WhatsApp Image 2025-11-28 at 15.13.55.jpeg', alt: 'Symbol Element', span: '' },
     { id: 8, src: '/img1.jpeg', alt: 'Bar Counter Detail', span: 'tall' },
 ];

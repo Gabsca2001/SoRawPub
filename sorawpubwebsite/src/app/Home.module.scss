@@ -2,14 +2,17 @@
 
 // --- Main Container ---
 .snapContainer {
-  height: 100vh;
+  height: 100dvh;
   width: 100%;
   overflow-y: scroll;         // Must be scrollable to snap
   scroll-snap-type: y mandatory; // Enforce snap
   scroll-behavior: smooth;
 
+  touch-action: pan-y;
+
   // IMPORTANT: Fix for Safari/Mobile to ensure smooth momentum scrolling
   -webkit-overflow-scrolling: touch; 
+  overscroll-behavior-y: none;
 
   // Hide Scrollbar
   scrollbar-width: none;  // Firefox
@@ -21,10 +24,10 @@
 // Home.module.scss
 
 .section {
-  height: 100vh;
+  height: 100dvh;
   width: 100%;
   scroll-snap-align: start;
-  scroll-snap-stop: always;
+  scroll-snap-stop: normal;
   position: relative;
   
   // Modifica importante per gestire il mobile
@@ -41,6 +44,10 @@
 // Permette alla sezione del menu di scrollare internamente se la lista è lunga
 .menuScrollable {
   overflow-y: auto; 
+  touch-action: pan-y;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding-top: 0 !important;
   // Stile scrollbar personalizzato (opzionale)
   &::-webkit-scrollbar { width: 4px; }
   &::-webkit-scrollbar-thumb { background: #953513; border-radius: 4px; }

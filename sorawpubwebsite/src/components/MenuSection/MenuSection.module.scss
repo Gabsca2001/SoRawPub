@@ -21,12 +21,17 @@ $secondary: #b75b39;
   height: 100%;
 }
 
-// --- LEFT COLUMN ---
+// --- COLONNA SINISTRA ---
 .leftColumn {
   width: 55%;
   height: 100%;
   overflow-y: auto;
-  padding: 6rem 4rem 2rem 4rem;
+
+  // FIX STICKY 1: Rimuoviamo il padding-top dal contenitore!
+  // Prima era '6rem 4rem ...'. Ora è 0 sopra.
+  // Manteniamo il padding laterale e inferiore.
+  padding: 0 4rem 2rem 4rem;
+
   position: relative;
   z-index: 2;
 
@@ -45,45 +50,21 @@ $secondary: #b75b39;
 
   @media (max-width: 1024px) {
     width: 100%;
-    padding: 6rem 1.5rem 8rem 1.5rem;
+    // Anche su mobile, padding-top a 0
+    padding: 0 1.5rem 8rem 1.5rem;
     -webkit-overflow-scrolling: touch;
   }
 }
 
-// --- RIGHT COLUMN ---
-.rightColumn {
-  width: 45%;
-  height: 100%;
-  position: relative;
-  border-left: 1px solid rgba($text-cream, 0.1);
-  background: #000;
-
-  @media (max-width: 1024px) {
-    display: none; // Nascosto su mobile
-  }
-}
-
-.imageFrame {
-  width: 100%;
-  height: 100%;
-  position: relative;
-
-  .previewImg {
-    object-fit: cover;
-    animation: zoomPulse 20s infinite alternate;
-    animation: fadeImg 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-  }
-
-  .overlayGradient {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to right, $bg-dark 0%, transparent 40%);
-  }
-}
-
-// --- HEADER & CATEGORIES ---
+// --- HEADER ---
 .header {
-  margin-bottom: 2rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+
+  // FIX STICKY 2: Aggiungiamo lo spazio qui!
+  // Questo spinge il contenuto giù inizialmente per non finire sotto la Navbar,
+  // ma essendo dentro lo scroll, scorre via e lascia passare la barra sticky.
+  padding-top: 7rem; // 7rem = spazio Navbar + un po' di aria
 
   .subtitle {
     font-size: 0.85rem;
@@ -108,30 +89,57 @@ $secondary: #b75b39;
   }
 }
 
+// --- CATEGORY TABS ---
 .categoryWrapper {
   display: flex;
   gap: 0.8rem;
   margin-bottom: 2rem;
   flex-wrap: nowrap;
   overflow-x: auto;
+
+  // FIX STICKY 3: Ora top: 0 toccherà davvero il bordo superiore
   position: sticky;
   top: 0;
-  background: rgba($bg-dark, 0.95);
-  backdrop-filter: blur(10px);
-  padding: 1rem 0;
-  z-index: 10;
+  z-index: 20;
+
+  background: $bg-dark;
+
+  // Margini negativi per estendersi lateralmente sopra il padding di .leftColumn
+  margin-left: -4rem;
+  margin-right: -4rem;
+
+  // Padding interno per riallineare i bottoni
+  padding: 1rem 4rem;
+
   border-bottom: 1px solid rgba($text-cream, 0.1);
   scrollbar-width: none;
 
   &::-webkit-scrollbar {
     display: none;
   }
+
+  // Adattamento Mobile
+  @media (max-width: 1024px) {
+    margin-left: -1.5rem;
+    margin-right: -1.5rem;
+    padding: 1rem 1.5rem;
+    // Su mobile la navbar potrebbe essere più piccola o diversa, ma top:0 va bene
+    top: 0;
+  }
 }
+
+// ... (Il resto del codice rimane identico: .categoryBtn, .menuList, ecc.) ...
 
 .categoryBtn {
   background: transparent;
-  border: 1px solid rgba($text-cream, 0.2);
-  color: rgba($text-cream, 0.6);
+  
+  // MODIFICA 1: Aumenta contrasto bordo inattivo
+  border: 1px solid rgba($text-cream, 0.35); // Era 0.2
+  
+  // MODIFICA 2: Testo leggermente più brillante
+  color: rgba($text-cream, 0.85); // Era 0.6
+  
+  // ... resto invariato
   padding: 0.6rem 1.2rem;
   border-radius: 50px;
   font-size: 0.9rem;
@@ -145,17 +153,26 @@ $secondary: #b75b39;
   &:hover {
     border-color: $text-cream;
     color: $text-cream;
+    // Opzionale: aggiungi un leggerissimo sfondo al hover inattivo per feedback
+    background: rgba($text-cream, 0.05);
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      border-color: $text-cream;
+      color: $text-cream;
+    }
   }
 
   &.active {
     background: $primary;
     border-color: $primary;
-    color: white;
+    color: white; // Bianco puro per massimo contrasto
+    // Il resto è perfetto
     box-shadow: 0 4px 15px rgba($primary, 0.4);
   }
 }
 
-// --- MENU ITEMS ---
 .menuList {
   display: flex;
   flex-direction: column;
@@ -170,16 +187,27 @@ $secondary: #b75b39;
   transition: background 0.2s;
   border-bottom: 1px solid rgba($text-cream, 0.05);
 
+  @media (hover: hover) {
+    &:hover {
+      background: rgba(255, 255, 255, 0.03); 
+      .itemName { color: $gold; }
+      .line { opacity: 0.5; }
+    }
+  }
+
+  &.noImage {
+    @media (max-width: 1024px) {
+      cursor: default;
+    }
+  }
+
   &:active {
     background: rgba(255, 255, 255, 0.05);
   }
 
-  // Feedback tocco mobile
-
   @media (min-width: 1025px) {
     &:hover {
       background: rgba(255, 255, 255, 0.03);
-      transform: translateX(0px);
 
       .itemName {
         color: $gold;
@@ -204,15 +232,14 @@ $secondary: #b75b39;
     width: 100%;
   }
 
-  // Gruppo Nome + Icona Mobile
   .nameGroup {
     display: flex;
     align-items: center;
-    gap: 0.5rem; // Spazio tra nome e icona
+    gap: 0.5rem;
   }
 
   .itemName {
-    font-family: serif;
+    font-family: var(--font-nunito);
     font-size: 1.4rem;
     font-weight: 400;
     color: $text-cream;
@@ -224,7 +251,6 @@ $secondary: #b75b39;
     }
   }
 
-  // --- ICONA FOTOCAMERA MOBILE ---
   .mobilePhotoIcon {
     display: flex;
     align-items: center;
@@ -236,7 +262,6 @@ $secondary: #b75b39;
       opacity: 0.8;
     }
 
-    // NASCONDI SU DESKTOP (Importante!)
     @media (min-width: 1025px) {
       display: none;
     }
@@ -271,11 +296,85 @@ $secondary: #b75b39;
   }
 }
 
-.spacer {
-  height: 100px;
+.nextSectionHint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 3rem; // Stacca dall'ultimo elemento del menu
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+  padding: 1rem;
+
+  &:hover {
+    opacity: 1;
+    .hintArrow { color: $primary; }
+  }
+
+  .hintText {
+    font-family: monospace; // O il tuo font tecnico
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: $text-cream;
+  }
+
+  .hintArrow {
+    color: $text-cream;
+    width: 24px;
+    height: 24px;
+    transition: color 0.3s;
+    // Animazione rimbalzo
+    animation: bounce 2s infinite;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  // Nascondilo su schermi molto grandi se non serve (opzionale)
+  @media (min-width: 1400px) { display: none; }
 }
 
-// --- MODAL MOBILE ---
+.spacer {
+  height: 50px;
+}
+
+// COLONNA DESTRA (Invariata)
+.rightColumn {
+  width: 45%;
+  height: 100%;
+  position: relative;
+  border-left: 1px solid rgba($text-cream, 0.1);
+  background: #000;
+
+  @media (max-width: 1024px) {
+    display: none;
+  }
+}
+
+.imageFrame {
+  width: 100%;
+  height: 100%;
+  position: relative;
+
+  .previewImg {
+    object-fit: cover;
+    animation: zoomPulse 20s infinite alternate;
+    animation: fadeImg 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+
+  .overlayGradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, $bg-dark 0%, transparent 40%);
+  }
+}
+
+// MODAL & ANIMATIONS (Invariati)
 .modalOverlay {
   position: fixed;
   top: 0;

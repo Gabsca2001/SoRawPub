@@ -6,13 +6,19 @@ $primary-rust: #953513;
 
 .hero {
     position: relative;
-    height: 100vh;
+    // iOS Optimization: Use dynamic viewport height
+    height: 100vh; 
+    height: 100dvh; 
+    
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     overflow: hidden;
+
+    // Prevent elastic scroll effect on just this section if needed
+    overscroll-behavior: none; 
 }
 
 // --- VIDEO BACKGROUND ---
@@ -22,8 +28,11 @@ $primary-rust: #953513;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover; // Copre tutto lo schermo senza deformarsi
+    object-fit: cover; 
     z-index: 0;
+    
+    // Ensure video plays smoothly on iOS (low-power mode might pause it, but this helps)
+    transform: translateZ(0); 
 }
 
 // --- DARK OVERLAY (Il filtro scuro) ---
@@ -33,15 +42,17 @@ $primary-rust: #953513;
     left: 0;
     width: 100%;
     height: 100%;
-    // Regola qui l'opacità (0.6 = 60% scuro)
     background: rgba(10, 5, 5, 0.6);
     z-index: 1;
+    backdrop-filter: blur(0px);
+    // Fix for some iOS blending issues
+    -webkit-backdrop-filter: blur(0px); 
 }
 
 // --- CONTENITORE CONTENUTO ---
 .contentContainer {
     position: relative;
-    z-index: 2; // Sopra al video e all'overlay
+    z-index: 2; 
     max-width: 800px;
     height: 100%;
     display: flex;
@@ -49,29 +60,22 @@ $primary-rust: #953513;
     align-items: center;
     gap: 1rem;
     padding: 0 1rem;
-
-    // p {
-    //     font-size: clamp(1rem, 2.5vw, 1.25rem);
-    //     color: rgba($text-cream, 0.95);
-    //     margin: 0;
-    //     max-width: 600px;
-    //     font-weight: 300;
-    //     letter-spacing: 0.5px;
-    //     line-height: 1.6;
-
-    //     // Animazione entrata soft
-    //     opacity: 0;
-    //     transform: translateY(20px);
-    //     animation: contentFadeUp 1s ease-out forwards;
-    //     animation-delay: 0.2s;
-    // }
+    
+    // Center content vertically, accounting for iOS bars if dvh isn't supported perfectly
+    justify-content: center; 
 }
 
 // --- CONTENITORE PULSANTI ---
 .ctaContainer {
+    // Instead of absolute positioning which can be tricky with virtual keyboards/bars,
+    // we keep it in flow but push it down, or use relative positioning from bottom
     position: absolute;
     width: max-content;
-    bottom: 25%;
+    bottom: 20%; // Slightly adjusted for safer area on iOS
+    
+    // Safe area for iPhone X and newer (Home indicator)
+    padding-bottom: env(safe-area-inset-bottom); 
+
     display: flex;
     gap: 1.5rem;
     margin-top: 1rem;
@@ -82,9 +86,16 @@ $primary-rust: #953513;
     transform: translateY(20px);
     animation: contentFadeUp 1s ease-out forwards;
     animation-delay: 0.6s;
+
+    @media (max-width: 600px) {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        bottom: 25%; // Lift up slightly on mobile
+    }
 }
 
-// --- STILI BOTTONI (Invariati) ---
+// --- STILI BOTTONI ---
 .btn {
     position: relative;
     display: inline-block;
@@ -99,6 +110,14 @@ $primary-rust: #953513;
     transition: all 0.4s ease;
     border-radius: 50px;
     z-index: 1;
+    
+    // Remove tap highlight color on iOS
+    -webkit-tap-highlight-color: transparent;
+
+    @media (max-width: 600px) {
+        padding: 0.8rem 2rem;
+        font-size: 0.8rem;
+    }
 }
 
 .btnPrimary {
@@ -160,9 +179,10 @@ $primary-rust: #953513;
 .scrollIndicator {
     position: absolute;
     bottom: 2rem;
+    // Add safe area support
+    bottom: calc(2rem + env(safe-area-inset-bottom)); 
+    
     left: 50%;
-    // Qui non usiamo translate nell'hover per evitare conflitti con l'animazione di entrata
-    // Gestiamo la posizione fissa qui:
     transform: translateX(-50%);
 
     display: flex;
@@ -176,9 +196,11 @@ $primary-rust: #953513;
     animation: fadeReveal 1s ease-out forwards;
     animation-delay: 1.2s;
 
+    // Fix tap highlight
+    -webkit-tap-highlight-color: transparent;
+
     &:hover {
         opacity: 1;
-        // Modifichiamo solo Y, mantenendo X fisso
         transform: translateX(-50%) translateY(5px);
     }
 }
@@ -214,58 +236,25 @@ $primary-rust: #953513;
     animation-delay: 1s;
 }
 
-// --- KEYFRAMES ---
-
+// --- KEYFRAMES (Unchanged) ---
 @keyframes contentFadeUp {
-    0% {
-        opacity: 0;
-        transform: translateY(30px);
-        filter: blur(5px);
-    }
-
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-        filter: blur(0);
-    }
+    0% { opacity: 0; transform: translateY(30px); filter: blur(5px); }
+    100% { opacity: 1; transform: translateY(0); filter: blur(0); }
 }
 
 @keyframes fadeReveal {
-    0% {
-        opacity: 0;
-    }
-
-    100% {
-        opacity: 0.8;
-    }
+    0% { opacity: 0; }
+    100% { opacity: 0.8; }
 }
 
 @keyframes scrollWheel {
-    0% {
-        opacity: 1;
-        top: 8px;
-    }
-
-    50% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0;
-        top: 25px;
-    }
+    0% { opacity: 1; top: 8px; }
+    50% { opacity: 1; }
+    100% { opacity: 0; top: 25px; }
 }
 
 @keyframes arrowFade {
-    0% {
-        opacity: 0;
-    }
-
-    50% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0;
-    }
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
 }

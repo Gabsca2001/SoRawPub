@@ -64,13 +64,12 @@ const MENU_ITEMS = [
 ];
 
 // Immagine di Default (Atmosfera)
-const DEFAULT_IMAGE = '/img44.jpg'; 
+const DEFAULT_IMAGE = '/img44.jpg';
 
 export default function MenuSection() {
-    // Iniziamo con 'signatures' che ha foto fighe
     const [activeCategory, setActiveCategory] = useState('signatures');
     const [previewImage, setPreviewImage] = useState(DEFAULT_IMAGE);
-    const [mobileModalImg, setMobileModalImg] = useState(null); 
+    const [mobileModalImg, setMobileModalImg] = useState(null);
 
     const filteredItems = MENU_ITEMS.filter(item => item.category === activeCategory);
 
@@ -86,17 +85,31 @@ export default function MenuSection() {
         }
     };
 
+    const goToNextSection = () => {
+        // Cerca il contenitore principale
+        const scroller = document.getElementById('main-scroller');
+        // Cerca la sezione successiva (Gallery) tramite il suo ID
+        const nextSection = document.getElementById('gallery');
+        
+        if (scroller && nextSection) {
+            // Calcola la posizione top della gallery relativa al contenitore
+            const topPos = nextSection.offsetTop;
+            // Scrolla il contenitore principale (non il menu interno)
+            scroller.scrollTo({ top: topPos, behavior: 'smooth' });
+        }
+    };
+
     return (
         <section className={styles.menuSection} id="menu">
-            
+
             <div className={styles.splitLayout}>
-                
+
                 {/* 1. COLONNA SINISTRA (Lista Menu Scrollabile) */}
                 <div className={styles.leftColumn}>
-                    
+
                     <div className={styles.header}>
                         <span className={styles.subtitle}>Taste Experience</span>
-                        <h2>Il Menu</h2>
+                        <h2>Il Menù</h2>
                     </div>
 
                     {/* CATEGORY SLIDER (Sticky & Scrollable) */}
@@ -115,24 +128,24 @@ export default function MenuSection() {
                     {/* LISTA MENU */}
                     <div className={styles.menuList}>
                         {filteredItems.map((item) => (
-                            <div 
-                                key={item.id} 
-                                className={styles.menuItem}
+                            <div
+                                key={item.id}
+                                className={`${styles.menuItem} ${!item.image ? styles.noImage : ''}`}
                                 onMouseEnter={() => handleDesktopHover(item.image)}
                                 onClick={() => handleItemClick(item.image)}
-                                style={{ cursor: (!item.image && typeof window !== 'undefined' && window.innerWidth <= 1024) ? 'default' : 'pointer' }}
+                                
                             >
                                 <div className={styles.itemMain}>
                                     <div className={styles.namePriceRow}>
-                                        
+
                                         <div className={styles.nameGroup}>
                                             <h3 className={styles.itemName}>{item.name}</h3>
                                             {/* ICONA CAMERA MOBILE */}
                                             {item.image && (
                                                 <span className={styles.mobilePhotoIcon}>
                                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                                                        <circle cx="12" cy="13" r="4"/>
+                                                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                                                        <circle cx="12" cy="13" r="4" />
                                                     </svg>
                                                 </span>
                                             )}
@@ -145,6 +158,16 @@ export default function MenuSection() {
                                 </div>
                             </div>
                         ))}
+
+                        <div className={styles.nextSectionHint} onClick={goToNextSection}>
+                            <span className={styles.hintText}>Scopri la Gallery</span>
+                            <div className={styles.hintArrow}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+                                </svg>
+                            </div>
+                        </div>
+
                         {/* Spazio finale abbondante per scrollare comodamente fino all'ultimo elemento */}
                         <div className={styles.spacer}></div>
                     </div>
@@ -153,11 +176,11 @@ export default function MenuSection() {
                 {/* 2. COLONNA DESTRA (Desktop Preview) */}
                 <div className={styles.rightColumn}>
                     <div className={styles.imageFrame}>
-                        <Image 
-                            key={previewImage} 
-                            src={previewImage} 
-                            alt="Menu Preview" 
-                            fill 
+                        <Image
+                            key={previewImage}
+                            src={previewImage}
+                            alt="Menu Preview"
+                            fill
                             className={styles.previewImg}
                             priority
                         />

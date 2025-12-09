@@ -35,7 +35,7 @@ export default function Hero() {
                     <a href="/prenota" className={`${styles.btn} ${styles.btnPrimary}`}>
                         Prenota Ora
                     </a>
-                    <a href="/menu" className={`${styles.btn} ${styles.btnSecondary}`}>
+                    <a href="#menu" className={`${styles.btn} ${styles.btnSecondary}`}>
                         Scopri Menu
                     </a>
                 </div>
