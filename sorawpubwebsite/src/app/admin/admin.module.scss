@@ -1,13 +1,14 @@
 // --- Variabili & Palette ---
 $bg-dark: #001a13;
-$bg-panel: #0d2620; // Sfondo leggermente più chiaro per i pannelli
-$surface: rgba(255, 255, 255, 0.03); // Effetto vetro
+$bg-panel: #0d2620;
+$surface: rgba(255, 255, 255, 0.03);
 $border: rgba(224, 213, 187, 0.1);
 $text-cream: #e0d5bb;
 $primary: #953513;
 $accent: #b75b39;
 $danger: #8a2a2a;
 
+// --- LAYOUT GENERALE ---
 .loadingScreen {
     height: 100vh;
     display: flex;
@@ -15,19 +16,34 @@ $danger: #8a2a2a;
     justify-content: center;
     background: $bg-dark;
     color: $text-cream;
-    font-family: serif;
+    font-family: var(--font-inter, sans-serif);
     font-size: 1.5rem;
 }
 
 .dashboardLayout {
     display: flex;
-    min-height: 100vh;
+    height: 100vh; // Forza altezza viewport fissa
+    overflow: hidden; // Blocca scroll sul body principale
     background-color: $bg-dark;
     color: $text-cream;
     font-family: var(--font-inter, sans-serif);
 
     @media (max-width: 768px) {
         flex-direction: column;
+        overflow-y: auto; // Su mobile riabilita lo scroll normale
+    }
+}
+
+.mainContent {
+    flex: 1;
+    padding: 3rem;
+    overflow-y: auto; // <--- FONDAMENTALE: Scrolla solo il contenuto, non la sidebar
+    height: 100%; // Occupa tutto lo spazio disponibile
+    position: relative;
+
+    @media (max-width: 768px) {
+        padding: 1.5rem;
+        height: auto;
     }
 }
 
@@ -64,7 +80,7 @@ $danger: #8a2a2a;
         font-weight: bold;
         letter-spacing: 1px;
     }
-    
+
     .badge {
         font-size: 0.6rem;
         background: $primary;
@@ -74,7 +90,9 @@ $danger: #8a2a2a;
         font-weight: 700;
     }
 
-    @media (max-width: 768px) { margin-bottom: 0; }
+    @media (max-width: 768px) {
+        margin-bottom: 0;
+    }
 }
 
 .navLinks {
@@ -96,10 +114,13 @@ $danger: #8a2a2a;
         transition: all 0.2s;
         font-size: 1rem;
 
-        svg { width: 20px; height: 20px; }
+        svg {
+            width: 20px;
+            height: 20px;
+        }
 
         &:hover {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             color: $text-cream;
         }
 
@@ -111,7 +132,9 @@ $danger: #8a2a2a;
         }
     }
 
-    @media (max-width: 768px) { display: none; } // Nascondi link su mobile se non c'è menu hamburger
+    @media (max-width: 768px) {
+        display: none;
+    }
 }
 
 .navFooter {
@@ -138,10 +161,17 @@ $danger: #8a2a2a;
         color: rgba($text-cream, 0.5);
         cursor: pointer;
         font-size: 0.85rem;
-        &:hover { text-decoration: underline; color: $danger; }
+
+        &:hover {
+            text-decoration: underline;
+            color: $danger;
+        }
     }
-    
-    @media (max-width: 768px) { padding-top: 0; border: none; }
+
+    @media (max-width: 768px) {
+        padding-top: 0;
+        border: none;
+    }
 }
 
 // --- MAIN CONTENT ---
@@ -150,7 +180,9 @@ $danger: #8a2a2a;
     padding: 3rem;
     overflow-y: auto;
 
-    @media (max-width: 768px) { padding: 1.5rem; }
+    @media (max-width: 768px) {
+        padding: 1.5rem;
+    }
 }
 
 .topHeader {
@@ -162,7 +194,7 @@ $danger: #8a2a2a;
     gap: 1.5rem;
 
     h1 {
-        font-family: serif;
+        font-family: var(--font-inter, sans-serif);
         font-size: 2.5rem;
         margin: 0;
     }
@@ -176,6 +208,7 @@ $danger: #8a2a2a;
     .actions {
         display: flex;
         gap: 1rem;
+        flex-wrap: wrap; // Per mobile
     }
 }
 
@@ -196,7 +229,10 @@ $danger: #8a2a2a;
         outline: none;
         font-size: 0.9rem;
         width: 200px;
-        &::placeholder { color: rgba($text-cream, 0.3); }
+
+        &::placeholder {
+            color: rgba($text-cream, 0.3);
+        }
     }
 }
 
@@ -217,21 +253,103 @@ $danger: #8a2a2a;
         background: white;
         transform: translateY(-2px);
     }
-    
-    svg { width: 18px; }
+
+    svg {
+        width: 18px;
+    }
 }
 
-// --- TABELLA PRENOTAZIONI ---
+// --- FILTRO DATA ---
+.dateFilter {
+    display: flex;
+    align-items: center;
+    background: $surface;
+    border: 1px solid $border;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    gap: 0.5rem;
+    position: relative;
+
+    svg {
+        color: $primary;
+        width: 18px;
+    }
+
+    .dateInput {
+        background: transparent;
+        border: none;
+        color: $text-cream;
+        font-family: inherit;
+        outline: none;
+
+        &::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            opacity: 0.6;
+            cursor: pointer;
+        }
+    }
+
+    .resetBtn {
+        background: transparent;
+        border: none;
+        color: rgba($text-cream, 0.5);
+        cursor: pointer;
+        font-size: 0.8rem;
+        margin-left: 5px;
+
+        &:hover {
+            color: $danger;
+        }
+    }
+}
+
+.sectionTitle {
+    font-family: var(--font-inter, sans-serif);
+    color: $primary; // O il tuo colore accent
+    margin: 2rem 0 1rem 0;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    svg { width: 22px; height: 22px; }
+}
+
+// Separatore visivo per lo storico
+.historySection {
+    margin-top: 4rem; // Spazio abbondante
+    border-top: 1px dashed rgba($text-cream, 0.2); // Linea tratteggiata
+    padding-top: 1rem;
+    opacity: 0.8; // Leggermente meno evidente visivamente
+    transition: opacity 0.3s;
+    max-height: none; // Lascia che la tabella prenda l'altezza che serve
+    margin-bottom: 2rem;
+    &:hover { opacity: 1; } // Diventa full opacity al passaggio mouse
+}
+
+// --- TABELLA PRENOTAZIONI (AGGIORNATA) ---
 .tableContainer {
     background: $bg-panel;
     border-radius: 12px;
     border: 1px solid $border;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 200px); // Altezza massima calcolata per lasciare spazio all'header
+
+    // Wrapper interno per lo scroll della tabella
+    .tableScroll {
+        overflow-x: auto;
+        overflow-y: auto;
+        width: 100%;
+    }
 }
 
 .dataTable {
     width: 100%;
     border-collapse: collapse;
+    min-width: 900px; // Aumentato per accomodare le colonne separate
+    table-layout: fixed; // Per larghezze fisse colonne
 
     th {
         text-align: left;
@@ -241,38 +359,239 @@ $danger: #8a2a2a;
         font-size: 0.8rem;
         text-transform: uppercase;
         letter-spacing: 1px;
+        position: sticky; // Header fisso mentre scorri
+        top: 0;
+        background-color: $bg-panel; // Copre il contenuto che scorre sotto
+        z-index: 10;
+
+        // --- LARGHEZZE FISSE COLONNE ---
+        &:nth-child(1) {
+            width: 15%;
+        }
+
+        // Data
+        &:nth-child(2) {
+            width: 20%;
+        }
+
+        // Cliente
+        &:nth-child(3) {
+            width: 10%;
+        }
+
+        // Ospiti
+        &:nth-child(4) {
+            width: 15%;
+        }
+
+        // Stato
+        &:nth-child(5) {
+            width: 25%;
+        }
+
+        // Note (Più larga)
+        &:nth-child(6) {
+            width: 15%;
+        }
+
+        // Contatto
     }
 
     td {
         padding: 1.2rem;
         border-bottom: 1px solid rgba($border, 0.5);
         vertical-align: middle;
+        font-size: 0.95rem;
     }
 
-    tr:last-child td { border-bottom: none; }
-    tr:hover { background: rgba(255,255,255,0.02); }
+    .notesAlert {
+        display: flex;
+        align-items: center; // Centra icona e testo
+        gap: 0.5rem;
+        background: rgba(255, 159, 67, 0.1);
+        border: 1px solid rgba(255, 159, 67, 0.3);
+        padding: 8px;
+        border-radius: 6px;
+        width: 100%;
+        cursor: pointer; // Indica che è cliccabile
+        transition: background 0.2s;
+
+        &:hover {
+            background: rgba(255, 159, 67, 0.2);
+        }
+
+        .alertIcon {
+            font-size: 1rem;
+            flex-shrink: 0; // L'icona non si schiaccia
+        }
+
+        .noteContent {
+            font-size: 0.85rem;
+            color: #ffccbc;
+            font-style: italic;
+
+            // --- TRONCAMENTO TESTO ---
+            white-space: nowrap; // Tutto su una riga
+            overflow: hidden; // Nascondi ciò che esce
+            text-overflow: ellipsis; // Aggiungi "..."
+            display: block;
+            max-width: 100%;
+        }
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    tr:hover {
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    // Stili Celle
+    .dateTime {
+        display: flex;
+        flex-direction: column;
+        gap: 0.1rem; // Meno spazio tra data e ora
+        align-items: flex-start;
+    }
+
+    .dateText {
+        color: #e0d5bb; // Crema
+        font-family: var(--font-nunito, sans-serif);
+        font-size: 1.1rem; // Molto più grande
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        opacity: 0.9;
+    }
 
     .dateBadge {
         background: rgba($primary, 0.2);
         color: lighten($primary, 20%);
         padding: 4px 8px;
         border-radius: 6px;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         font-weight: 500;
     }
 
-    .highlight { font-weight: bold; color: white; }
-    
-    .clientName { font-weight: 600; }
-    .clientEmail { font-size: 0.8rem; opacity: 0.6; }
-    
-    .phoneLink { 
-        color: $text-cream; 
-        text-decoration: none; 
-        border-bottom: 1px dotted rgba($text-cream, 0.5); 
+    .timeHighlight {
+        font-size: 0.95rem;
+        color: $primary; // Colore ruggine per l'ora
+        font-weight: 600;
+        background: rgba($primary, 0.15);
+        padding: 2px 6px;
+        border-radius: 4px;
+        display: inline-block;
     }
 
-    .emptyState { text-align: center; padding: 3rem; opacity: 0.5; }
+    .clientName {
+        font-weight: 600;
+        color: $text-cream;
+    }
+
+    .clientEmail {
+        font-size: 0.8rem;
+        opacity: 0.6;
+        margin-top: 2px;
+    }
+
+    .phoneLink {
+        color: $text-cream;
+        text-decoration: none;
+        border-bottom: 1px dotted rgba($text-cream, 0.5);
+
+        &:hover {
+            color: white;
+            border-bottom-style: solid;
+        }
+    }
+
+    .paxBadge {
+        font-weight: 600;
+        color: $text-cream;
+    }
+
+    // --- NUOVI STILI PER COLONNE SEPARATE ---
+
+    // Select dropdown per lo stato
+    .statusSelect {
+        width: 100%;
+        appearance: none;
+        background-color: transparent;
+        border: 1px solid rgba($text-cream, 0.3);
+        border-radius: 6px;
+        padding: 6px 10px;
+        color: $text-cream;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-transform: uppercase;
+        text-align: center;
+        outline: none;
+        transition: all 0.2s;
+
+        &.pending {
+            color: #ffc107;
+            border-color: #ffc107;
+            background: rgba(255, 193, 7, 0.1);
+        }
+
+        &.confirmed {
+            color: #28a745;
+            border-color: #28a745;
+            background: rgba(40, 167, 69, 0.1);
+        }
+
+        &.cancelled {
+            color: #dc3545;
+            border-color: #dc3545;
+            background: rgba(220, 53, 69, 0.1);
+        }
+
+        option {
+            background-color: $bg-dark;
+            color: $text-cream;
+            text-align: left;
+        }
+    }
+
+    // Alert per le note (Nuovo stile)
+    .notesAlert {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+        background: rgba(255, 159, 67, 0.1); // Arancione molto soft
+        border: 1px solid rgba(255, 159, 67, 0.3);
+        padding: 8px;
+        border-radius: 6px;
+        width: 100%;
+
+        .alertIcon {
+            font-size: 1rem;
+            margin-top: -2px;
+        }
+
+        .noteContent {
+            font-size: 0.85rem;
+            color: #ffccbc; // Crema rosato
+            line-height: 1.4;
+            font-style: italic;
+            white-space: normal; // Importante per far andare a capo il testo lungo
+        }
+    }
+
+    .noNotes {
+        color: rgba($text-cream, 0.2);
+        display: block;
+        text-align: center;
+        font-size: 1.5rem;
+        line-height: 1;
+    }
+
+    .emptyState {
+        text-align: center;
+        padding: 3rem;
+        opacity: 0.5;
+    }
 }
 
 // --- MENU GRID & CARDS ---
@@ -290,7 +609,11 @@ $danger: #8a2a2a;
     border-radius: 12px;
     animation: slideDown 0.3s ease-out;
 
-    h3 { margin-top: 0; font-family: serif; color: $primary; }
+    h3 {
+        margin-top: 0;
+        font-family: var(--font-nunito, sans-serif);
+        color: $primary;
+    }
 
     form {
         display: flex;
@@ -304,15 +627,20 @@ $danger: #8a2a2a;
         gap: 1rem;
     }
 
-    input, select, textarea {
-        background: rgba(0,0,0,0.3);
+    input,
+    select,
+    textarea {
+        background: rgba(0, 0, 0, 0.3);
         border: 1px solid $border;
         border-radius: 6px;
         padding: 0.8rem;
         color: $text-cream;
         font-family: inherit;
         outline: none;
-        &:focus { border-color: $primary; }
+
+        &:focus {
+            border-color: $primary;
+        }
     }
 
     .formActions {
@@ -329,8 +657,15 @@ $danger: #8a2a2a;
             font-weight: 600;
         }
 
-        button[type="button"] { background: transparent; color: rgba($text-cream, 0.6); }
-        .saveBtn { background: $primary; color: white; }
+        button[type="button"] {
+            background: transparent;
+            color: rgba($text-cream, 0.6);
+        }
+
+        .saveBtn {
+            background: $primary;
+            color: white;
+        }
     }
 }
 
@@ -363,8 +698,12 @@ $danger: #8a2a2a;
         margin-bottom: 1rem;
     }
 
-    h4 { margin: 0 0 0.5rem 0; font-family: serif; font-size: 1.2rem; }
-    
+    h4 {
+        margin: 0 0 0.5rem 0;
+        font-family: var(--font-nunito, sans-serif);
+        font-size: 1.2rem;
+    }
+
     .desc {
         font-size: 0.9rem;
         opacity: 0.6;
@@ -387,10 +726,21 @@ $danger: #8a2a2a;
         border-radius: 20px;
         font-weight: 700;
         letter-spacing: 0.5px;
-        
-        &.cocktail { background: rgba(255, 165, 0, 0.15); color: orange; }
-        &.wine { background: rgba(128, 0, 128, 0.15); color: #dda0dd; }
-        &.food { background: rgba(0, 128, 0, 0.15); color: #90ee90; }
+
+        &.cocktail {
+            background: rgba(255, 165, 0, 0.15);
+            color: orange;
+        }
+
+        &.wine {
+            background: rgba(128, 0, 128, 0.15);
+            color: #dda0dd;
+        }
+
+        &.food {
+            background: rgba(0, 128, 0, 0.15);
+            color: #90ee90;
+        }
     }
 
     .iconBtn {
@@ -400,11 +750,92 @@ $danger: #8a2a2a;
         cursor: pointer;
         padding: 4px;
         border-radius: 4px;
-        &:hover { background: rgba($danger, 0.2); color: #ff6b6b; }
+
+        &:hover {
+            background: rgba($danger, 0.2);
+            color: #ff6b6b;
+        }
     }
 }
 
 @keyframes slideDown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// --- MODAL STYLES ---
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); // Sfondo scuro semitrasparente
+    backdrop-filter: blur(4px); // Effetto sfocato figo
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.modalContent {
+    background: $bg-panel;
+    border: 1px solid $primary;
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+
+    h3 {
+        margin-top: 0;
+        color: $primary;
+        font-family: var(--font-nunito, sans-serif);
+        border-bottom: 1px solid $border;
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    p {
+        line-height: 1.6;
+        color: $text-cream;
+        font-size: 1rem;
+        white-space: pre-wrap; // Mantiene gli a capo se presenti
+    }
+
+    .closeBtn {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: transparent;
+        border: none;
+        color: rgba($text-cream, 0.5);
+        font-size: 1.5rem;
+        cursor: pointer;
+
+        &:hover {
+            color: $text-cream;
+        }
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
