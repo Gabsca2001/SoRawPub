@@ -1,9 +1,7 @@
 // src/app/loading.module.scss
 
 // --- Palette ---
-$primary: #953513;   // Ruggine
-$text-cream: #e0d5bb; // Crema
-$bg-dark: #001a13;    // Sfondo scuro (Sixth)
+$bg-dark: #001a13;
 
 .loaderWrapper {
   position: fixed;
@@ -12,70 +10,47 @@ $bg-dark: #001a13;    // Sfondo scuro (Sixth)
   width: 100vw;
   height: 100vh;
   background-color: $bg-dark;
-  z-index: 99999; // Sopra a tutto, anche alla navbar
+  z-index: 99999; // Sopra a tutto
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 2rem;
+  justify-content: center; // Centra orizzontalmente
+  align-items: center;     // Centra verticalmente
 }
 
-.spinnerContainer {
+.logoContainer {
   position: relative;
-  width: 80px;
-  height: 80px;
+  // Puoi regolare qui la dimensione massima se vuoi
+  width: auto;
+  height: auto;
 }
 
-// Cerchio Esterno (Ruggine)
-.spinnerOuter {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border: 2px solid transparent;
-  border-top-color: $primary;
-  border-right-color: $primary;
-  border-radius: 50%;
-  animation: spin 1.5s linear infinite;
+.pulsingLogo {
+  width: 120px;       // Dimensione base logo
+  height: auto;       // Mantiene aspect ratio
+  object-fit: contain;
+  
+  // L'animazione applicata direttamente all'immagine
+  animation: breathe 2s ease-in-out infinite;
+
+  // Renderà l'animazione più fluida su alcuni browser
+  will-change: transform, opacity;
+
+  @media (min-width: 768px) {
+    width: 160px; // Un po' più grande su desktop
+  }
 }
 
-// Cerchio Interno (Crema)
-.spinnerInner {
-  position: absolute;
-  top: 15%;
-  left: 15%;
-  width: 70%;
-  height: 70%;
-  border: 2px solid transparent;
-  border-bottom-color: $text-cream;
-  border-left-color: $text-cream;
-  border-radius: 50%;
-  animation: spinReverse 1s linear infinite;
-}
-
-// Testo pulsante
-.loadingText {
-  font-family: serif; // O il tuo font Nunito/Inter
-  font-size: 1.2rem;
-  letter-spacing: 4px;
-  color: $text-cream;
-  text-transform: uppercase;
-  animation: pulse 1.5s ease-in-out infinite;
-  font-weight: 300;
-}
-
-// --- ANIMAZIONI ---
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@keyframes spinReverse {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(-360deg); }
-}
-
-@keyframes pulse {
-  0% { opacity: 0.5; }
-  50% { opacity: 1; }
-  100% { opacity: 0.5; }
+// --- ANIMAZIONE "RESPIRO" ---
+@keyframes breathe {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.05); // Leggero ingrandimento
+    opacity: 1;             // Piena visibilità
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.6;
+  }
 }

@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import styles from './HomeNavbar.module.scss';
 
 export default function HomeNavbar() {
@@ -7,37 +8,64 @@ export default function HomeNavbar() {
     const [isVisible, setIsVisible] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
 
+    const pathname = usePathname();
+    const router = useRouter();
+
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
 
-    // --- SCROLL TO SECTION FUNCTION ---
-    const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
-        e.preventDefault(); // Prevent default browser anchor behavior
-        
-        const scroller = document.getElementById('main-scroller');
-        const element = document.getElementById(id);
-
-        if (scroller && element) {
-            // Option A: Smooth scroll specifically within the container
-            // This calculates the top position of the element relative to the container
-            // Since sections are 100vh, this is usually just index * windowHeight
-            
-            // element.scrollIntoView works well for scroll-snap containers
-            element.scrollIntoView({ behavior: 'smooth' }); 
+    // --- 1. GENERAZIONE HREF ---
+    const getHref = (target: string) => {
+        if (target.startsWith('/')) {
+            return target;
         }
-        
-        setIsOpen(false); // Close mobile menu if open
+        return pathname === '/' ? `#${target}` : `/#${target}`;
     };
 
-    // --- SCROLL LOGIC (Auto-Hide) ---
+    // --- 2. GESTIONE NAVIGAZIONE ---
+    const handleNavigation = (e: React.MouseEvent<HTMLAnchorElement>, target: string) => {
+        e.preventDefault();
+        setIsOpen(false);
+
+        // CASO A: È una PAGINA reale (es. "/menu" o "/prenota")
+        if (target.startsWith('/')) {
+            router.push(target);
+            return;
+        }
+
+        // CASO B: È un'ANCORA (es. "home" o "contact")
+        if (pathname === '/') {
+            const element = document.getElementById(target);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+            window.history.pushState(null, '', `#${target}`);
+        } else {
+            router.push(`/#${target}`);
+        }
+    };
+
+    // --- 3. SCROLL ALL'ARRIVO ---
+    useEffect(() => {
+        if (pathname === '/' && window.location.hash) {
+            const id = window.location.hash.substring(1);
+            const element = document.getElementById(id);
+            if (element) {
+                setTimeout(() => {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+            }
+        }
+    }, [pathname]);
+
+    // --- LOGICA AUTO-HIDE ---
     useEffect(() => {
         const scroller = document.getElementById('main-scroller');
         const target = scroller || window;
 
         const controlNavbar = () => {
             const currentScrollY = scroller ? scroller.scrollTop : window.scrollY;
-
             if (currentScrollY > lastScrollY && currentScrollY > 100) {
                 setIsVisible(false);
             } else {
@@ -47,48 +75,48 @@ export default function HomeNavbar() {
         };
 
         target.addEventListener('scroll', controlNavbar);
-        return () => {
-            target.removeEventListener('scroll', controlNavbar);
-        };
+        return () => target.removeEventListener('scroll', controlNavbar);
     }, [lastScrollY]);
 
     useEffect(() => {
-        if (isOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'unset';
-        }
+        document.body.style.overflow = isOpen ? 'hidden' : 'unset';
     }, [isOpen]);
 
     return (
-        <header 
-            className={`${styles.navbar} ${!isVisible ? styles.hidden : ''}`}
-        >
+        <header className={`${styles.navbar} ${!isVisible ? styles.hidden : ''}`}>
             <div className={styles.container}>
                 
-                {/* --- 1. LEFT LINKS --- */}
+                {/* --- SINISTRA: Home, Menù --- */}
                 <nav className={styles.navGroup}>
-                    <a href="#home" onClick={(e) => scrollToSection(e, 'home')}>Home</a>
-                    <a href="#chi-siamo" onClick={(e) => scrollToSection(e, 'chi-siamo')}>Chi Siamo</a>
+                    <a href={getHref('home')} onClick={(e) => handleNavigation(e, 'home')}>
+                        Home
+                    </a>
+                    {/* Menù è una Pagina */}
+                    <a href={getHref('/menu')} onClick={(e) => handleNavigation(e, '/menu')}>
+                        Menù
+                    </a>
                 </nav>
 
-                {/* --- 2. LOGO --- */}
+                {/* --- CENTRO: Logo --- */}
                 <div className={styles.logoCenter}>
-                    <a href="#home" onClick={(e) => scrollToSection(e, 'home')}>
-                        <img
-                            src="/logo-desktop-png.png"
-                            alt="So Raw Pub Logo"
-                        />
+                    <a href={getHref('home')} onClick={(e) => handleNavigation(e, 'home')}>
+                        <img src="/logo-desktop-png.png" alt="So Raw Pub Logo" />
                     </a>
                 </div>
 
-                {/* --- 3. RIGHT LINKS --- */}
+                {/* --- DESTRA: Prenota, Contatti --- */}
                 <nav className={styles.navGroup}>
-                    <a href="#menu" onClick={(e) => scrollToSection(e, 'menu')}>Menù</a>
-                    <a href="#contact" onClick={(e) => scrollToSection(e, 'contact')}>Contatti</a>
+                    {/* Prenota è una Pagina (assumo tu abbia creato /prenota) */}
+                    <a href={getHref('/prenota')} onClick={(e) => handleNavigation(e, '/prenota')}>
+                        Prenota
+                    </a>
+                    {/* Contatti è un'Ancora in Home */}
+                    <a href={getHref('contact')} onClick={(e) => handleNavigation(e, 'contact')}>
+                        Contatti
+                    </a>
                 </nav>
 
-                {/* --- 4. HAMBURGER --- */}
+                {/* --- HAMBURGER --- */}
                 <button 
                     className={styles.hamburger} 
                     onClick={toggleMenu}
@@ -100,12 +128,12 @@ export default function HomeNavbar() {
                 </button>
             </div>
 
-            {/* --- 5. MOBILE MENU --- */}
+            {/* --- MOBILE MENU --- */}
             <div className={`${styles.mobileMenu} ${isOpen ? styles.open : ''}`}>
-                <a href="#home" onClick={(e) => scrollToSection(e, 'home')}>Home</a>
-                <a href="#chi-siamo" onClick={(e) => scrollToSection(e, 'chi-siamo')}>Chi Siamo</a>
-                <a href="#menu" onClick={(e) => scrollToSection(e, 'menu')}>Menù</a>
-                <a href="#contact" onClick={(e) => scrollToSection(e, 'contact')}>Contatti</a>
+                <a href={getHref('home')} onClick={(e) => handleNavigation(e, 'home')}>Home</a>
+                <a href={getHref('/menu')} onClick={(e) => handleNavigation(e, '/menu')}>Menù</a>
+                <a href={getHref('/prenota')} onClick={(e) => handleNavigation(e, '/prenota')}>Prenota</a>
+                <a href={getHref('contact')} onClick={(e) => handleNavigation(e, 'contact')}>Contatti</a>
             </div>
         </header>
     );

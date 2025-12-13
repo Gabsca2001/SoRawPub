@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Nunito } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/context/AuthContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -10,7 +11,7 @@ const inter = Inter({
 
 const nunito = Nunito({
   subsets: ["latin"],
-  variable: "--font-nunito", 
+  variable: "--font-nunito",
   display: "swap",
 });
 
@@ -36,7 +37,9 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${nunito.variable} antialiased`}
       >
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

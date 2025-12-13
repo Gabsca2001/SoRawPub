@@ -1,0 +1,233 @@
+// --- Palette (Uguale a BentoSection) ---
+$primary: #953513;
+$secondary: #b75b39;
+$fourth: #e0d5bb; // Crema
+$sixth: #001a13;  // Verde scurissimo (sfondo)
+$seventh: #3f815c;
+
+.reservationSection {
+    background-color: $sixth;
+    color: $fourth;
+    padding: 6rem 1.5rem;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-inter, sans-serif); // Assumo tu abbia Inter o Nunito
+}
+
+.container {
+    width: 100%;
+    max-width: 600px; // Form stretto ed elegante
+    margin: 0 auto;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 3rem;
+
+    .subtitle {
+        display: block;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 0.85rem;
+        color: $primary;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+    }
+
+    .title {
+        font-family: serif; // O il tuo font serif preferito
+        font-size: 3rem;
+        margin: 0 0 1rem 0;
+        color: $fourth;
+    }
+
+    .description {
+        opacity: 0.7;
+        font-size: 1rem;
+        line-height: 1.6;
+        max-width: 80%;
+        margin: 0 auto;
+    }
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+
+    @media (max-width: 600px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    label {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        opacity: 0.8;
+    }
+
+    input, select, textarea {
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid rgba($fourth, 0.3);
+        padding: 0.8rem 0;
+        color: $fourth;
+        font-size: 1.1rem; // IMPORTANTE: Se < 16px, iOS zooma quando clicchi. 1.1rem di solito è ok (>17px).
+        font-family: inherit;
+        outline: none;
+        transition: border-color 0.3s ease;
+        width: 100%; // Assicura larghezza piena
+
+        // --- FIX PER IOS (iPhone/iPad) ---
+        -webkit-appearance: none; // Rimuove lo stile 3D/bottone nativo di Apple
+        appearance: none;         // Standard moderno
+        border-radius: 0;         // Rimuove gli angoli arrotondati di default di iOS
+        background-clip: padding-box; // Fix per certi render strani su mobile
+
+        &::placeholder {
+            color: rgba($fourth, 0.3);
+        }
+
+        &:focus {
+            border-bottom-color: $primary;
+        }
+    }
+
+    textarea {
+        resize: vertical; // Permette ridimensionamento solo in altezza
+        min-height: 60px;
+        line-height: 1.5;
+    }
+
+    // Fix per l'icona del calendario su Chrome scuro
+    input[type="date"] {
+        &::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            opacity: 0.6;
+            cursor: pointer;
+        }
+    }
+    
+    // Stile custom per le opzioni select (spesso rimangono bianche)
+    select option {
+        background-color: $sixth;
+        color: $fourth;
+    }
+}
+
+// --- Slot Orari (Radio Button personalizzati) ---
+.slotsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.slotLabel {
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+    
+    input {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    span {
+        display: block;
+        padding: 0.5rem 1rem;
+        border: 1px solid rgba($fourth, 0.3);
+        border-radius: 4px;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+    }
+
+    &:hover span {
+        border-color: $fourth;
+    }
+
+    // Stato selezionato
+    &.selected span {
+        background-color: $fourth;
+        color: $sixth;
+        border-color: $fourth;
+        font-weight: 600;
+    }
+
+    .hiddenRadio {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+}
+
+// --- Bottone Submit ---
+.submitBtn {
+    margin-top: 1rem;
+    background-color: $primary;
+    color: #fff;
+    border: none;
+    padding: 1.2rem;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: $secondary;
+    }
+
+    &:disabled {
+        background-color: $seventh;
+        cursor: default;
+    }
+}
+
+.successMessage {
+    text-align: center;
+    color: $fourth;
+    border: 1px solid $seventh;
+    padding: 1rem;
+    background: rgba($seventh, 0.2);
+    margin-top: 1rem;
+}
+
+.inputError {
+    border-bottom-color: #ff6b6b !important;
+    color: #ff6b6b !important;
+}
+
+.textError {
+    color: #ff6b6b !important;
+}
+
+.errorText {
+    font-size: 0.75rem;
+    color: #ff6b6b;
+    margin-top: 0.2rem;
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}

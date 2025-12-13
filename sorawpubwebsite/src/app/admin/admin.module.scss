@@ -1,0 +1,410 @@
+// --- Variabili & Palette ---
+$bg-dark: #001a13;
+$bg-panel: #0d2620; // Sfondo leggermente più chiaro per i pannelli
+$surface: rgba(255, 255, 255, 0.03); // Effetto vetro
+$border: rgba(224, 213, 187, 0.1);
+$text-cream: #e0d5bb;
+$primary: #953513;
+$accent: #b75b39;
+$danger: #8a2a2a;
+
+.loadingScreen {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $bg-dark;
+    color: $text-cream;
+    font-family: serif;
+    font-size: 1.5rem;
+}
+
+.dashboardLayout {
+    display: flex;
+    min-height: 100vh;
+    background-color: $bg-dark;
+    color: $text-cream;
+    font-family: var(--font-inter, sans-serif);
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
+}
+
+// --- SIDEBAR ---
+.navbar {
+    width: 260px;
+    background: darken($bg-dark, 2%);
+    border-right: 1px solid $border;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    flex-shrink: 0;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+        border-right: none;
+        border-bottom: 1px solid $border;
+    }
+}
+
+.brand {
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .logoText {
+        font-family: serif;
+        font-size: 1.5rem;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+    
+    .badge {
+        font-size: 0.6rem;
+        background: $primary;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 700;
+    }
+
+    @media (max-width: 768px) { margin-bottom: 0; }
+}
+
+.navLinks {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+
+    button {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        background: transparent;
+        border: none;
+        color: rgba($text-cream, 0.6);
+        padding: 0.8rem 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 1rem;
+
+        svg { width: 20px; height: 20px; }
+
+        &:hover {
+            background: rgba(255,255,255,0.05);
+            color: $text-cream;
+        }
+
+        &.active {
+            background: $surface;
+            color: $text-cream;
+            border-left: 3px solid $primary;
+            font-weight: 600;
+        }
+    }
+
+    @media (max-width: 768px) { display: none; } // Nascondi link su mobile se non c'è menu hamburger
+}
+
+.navFooter {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-top: 1px solid $border;
+    padding-top: 1.5rem;
+
+    .userAvatar {
+        width: 35px;
+        height: 35px;
+        background: $primary;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+
+    .logoutBtn {
+        background: transparent;
+        border: none;
+        color: rgba($text-cream, 0.5);
+        cursor: pointer;
+        font-size: 0.85rem;
+        &:hover { text-decoration: underline; color: $danger; }
+    }
+    
+    @media (max-width: 768px) { padding-top: 0; border: none; }
+}
+
+// --- MAIN CONTENT ---
+.mainContent {
+    flex: 1;
+    padding: 3rem;
+    overflow-y: auto;
+
+    @media (max-width: 768px) { padding: 1.5rem; }
+}
+
+.topHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+
+    h1 {
+        font-family: serif;
+        font-size: 2.5rem;
+        margin: 0;
+    }
+
+    .subtitle {
+        margin: 0.5rem 0 0 0;
+        opacity: 0.6;
+        font-size: 0.95rem;
+    }
+
+    .actions {
+        display: flex;
+        gap: 1rem;
+    }
+}
+
+.searchBar {
+    background: $surface;
+    border: 1px solid $border;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba($text-cream, 0.5);
+
+    input {
+        background: transparent;
+        border: none;
+        color: $text-cream;
+        outline: none;
+        font-size: 0.9rem;
+        width: 200px;
+        &::placeholder { color: rgba($text-cream, 0.3); }
+    }
+}
+
+.primaryBtn {
+    background: $text-cream;
+    color: $bg-dark;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1.2rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+
+    &:hover {
+        background: white;
+        transform: translateY(-2px);
+    }
+    
+    svg { width: 18px; }
+}
+
+// --- TABELLA PRENOTAZIONI ---
+.tableContainer {
+    background: $bg-panel;
+    border-radius: 12px;
+    border: 1px solid $border;
+    overflow: hidden;
+}
+
+.dataTable {
+    width: 100%;
+    border-collapse: collapse;
+
+    th {
+        text-align: left;
+        padding: 1.2rem;
+        border-bottom: 1px solid $border;
+        color: rgba($text-cream, 0.5);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    td {
+        padding: 1.2rem;
+        border-bottom: 1px solid rgba($border, 0.5);
+        vertical-align: middle;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover { background: rgba(255,255,255,0.02); }
+
+    .dateBadge {
+        background: rgba($primary, 0.2);
+        color: lighten($primary, 20%);
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .highlight { font-weight: bold; color: white; }
+    
+    .clientName { font-weight: 600; }
+    .clientEmail { font-size: 0.8rem; opacity: 0.6; }
+    
+    .phoneLink { 
+        color: $text-cream; 
+        text-decoration: none; 
+        border-bottom: 1px dotted rgba($text-cream, 0.5); 
+    }
+
+    .emptyState { text-align: center; padding: 3rem; opacity: 0.5; }
+}
+
+// --- MENU GRID & CARDS ---
+.menuGridContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+// Form creazione piatto
+.dishFormCard {
+    background: $surface;
+    border: 1px solid $primary;
+    padding: 2rem;
+    border-radius: 12px;
+    animation: slideDown 0.3s ease-out;
+
+    h3 { margin-top: 0; font-family: serif; color: $primary; }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .formRow {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 1rem;
+    }
+
+    input, select, textarea {
+        background: rgba(0,0,0,0.3);
+        border: 1px solid $border;
+        border-radius: 6px;
+        padding: 0.8rem;
+        color: $text-cream;
+        font-family: inherit;
+        outline: none;
+        &:focus { border-color: $primary; }
+    }
+
+    .formActions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 1rem;
+
+        button {
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            border: none;
+            font-weight: 600;
+        }
+
+        button[type="button"] { background: transparent; color: rgba($text-cream, 0.6); }
+        .saveBtn { background: $primary; color: white; }
+    }
+}
+
+.cardsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.menuCard {
+    background: $surface;
+    border: 1px solid $border;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: transform 0.2s, border-color 0.2s;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    &:hover {
+        transform: translateY(-5px);
+        border-color: rgba($text-cream, 0.3);
+        background: lighten($bg-dark, 3%);
+    }
+
+    .cardHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    h4 { margin: 0 0 0.5rem 0; font-family: serif; font-size: 1.2rem; }
+    
+    .desc {
+        font-size: 0.9rem;
+        opacity: 0.6;
+        line-height: 1.5;
+        flex-grow: 1; // Spinge il prezzo in basso
+        margin-bottom: 1.5rem;
+    }
+
+    .priceTag {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: $primary;
+        text-align: right;
+    }
+
+    .catBadge {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        padding: 4px 8px;
+        border-radius: 20px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        
+        &.cocktail { background: rgba(255, 165, 0, 0.15); color: orange; }
+        &.wine { background: rgba(128, 0, 128, 0.15); color: #dda0dd; }
+        &.food { background: rgba(0, 128, 0, 0.15); color: #90ee90; }
+    }
+
+    .iconBtn {
+        background: transparent;
+        border: none;
+        color: rgba($text-cream, 0.3);
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        &:hover { background: rgba($danger, 0.2); color: #ff6b6b; }
+    }
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

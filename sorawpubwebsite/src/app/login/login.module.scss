@@ -1,0 +1,118 @@
+$bg-dark: #001a13;
+$text-cream: #e0d5bb;
+$primary: #953513;
+
+.loginContainer {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $bg-dark;
+    color: $text-cream;
+}
+
+.card {
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    border: 1px solid rgba($text-cream, 0.2);
+    padding: 3rem 2rem;
+    background: rgba(0, 0, 0, 0.2); // Leggero sfondo scuro
+
+    h1 {
+        font-family: serif;
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        color: $primary;
+    }
+
+    p {
+        opacity: 0.7;
+        margin-bottom: 2rem;
+        font-size: 0.9rem;
+    }
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.inputGroup {
+
+    .passwordWrapper {
+        position: relative; // Fondamentale per posizionare l'icona dentro
+        width: 100%;
+    }
+
+    input {
+        width: 100%;
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid rgba($text-cream, 0.3);
+        padding: 0.8rem 0;
+        color: $text-cream;
+        font-size: 1rem;
+        outline: none;
+        transition: border-color 0.3s;
+        border-radius: 0; // Fix iOS
+
+        &::placeholder {
+            color: rgba($text-cream, 0.3);
+        }
+
+        &:focus {
+            border-bottom-color: $primary;
+        }
+    }
+}
+
+.eyeBtn {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%); // Centra verticalmente
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: rgba($text-cream, 0.5);
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    color: $primary; // Diventa color ruggine al passaggio
+  }
+}
+
+.errorMsg {
+    color: #ff6b6b;
+    font-size: 0.9rem;
+    margin-top: -0.5rem;
+}
+
+.loginBtn {
+    margin-top: 1rem;
+    padding: 1rem 2rem;
+    background: $text-cream;
+    color: $bg-dark;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background: $primary;
+        color: white;
+    }
+}
