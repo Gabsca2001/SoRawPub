@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // --- Variabili & Palette ---
 $bg-dark: #001a13;
 $bg-panel: #0d2620;
@@ -50,7 +52,8 @@ $danger: #8a2a2a;
 // --- SIDEBAR ---
 .navbar {
     width: 260px;
-    background: darken($bg-dark, 2%);
+    // FIX: Sostituito darken con color.adjust (valore negativo)
+    background: color.adjust($bg-dark, $lightness: -2%);
     border-right: 1px solid $border;
     display: flex;
     flex-direction: column;
@@ -466,7 +469,8 @@ $danger: #8a2a2a;
 
     .dateBadge {
         background: rgba($primary, 0.2);
-        color: lighten($primary, 20%);
+        // FIX: Sostituito lighten con color.adjust (valore positivo)
+        color: color.adjust($primary, $lightness: 20%);
         padding: 4px 8px;
         border-radius: 6px;
         font-size: 0.8rem;
@@ -688,7 +692,8 @@ $danger: #8a2a2a;
     &:hover {
         transform: translateY(-5px);
         border-color: rgba($text-cream, 0.3);
-        background: lighten($bg-dark, 3%);
+        // FIX: Sostituito lighten con color.adjust (valore positivo)
+        background: color.adjust($bg-dark, $lightness: 3%);
     }
 
     .cardHeader {

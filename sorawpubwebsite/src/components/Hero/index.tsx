@@ -21,7 +21,7 @@ export default function Hero() {
                 muted 
                 playsInline // Importante per iOS
             >
-                <source src="/video-hero.mp4" type="video/mp4" />
+                <source src="/hero-video.mp4" type="video/mp4" />
                 {/* Fallback se il video non va */}
                 Your browser does not support the video tag.
             </video>

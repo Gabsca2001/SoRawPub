@@ -11,7 +11,7 @@ export default function BentoSectionTwo() {
 
         {/* 5. LIMONE */}
         <div className={`${styles.item} ${styles.symbolBox} ${styles.bgGold} ${styles.mobileCompact}`}>
-          <svg viewBox="0 0 40 40" className={`${styles.icon} ${styles.animSpin}`}>
+          {/* <svg viewBox="0 0 40 40" className={`${styles.icon} ${styles.animSpin}`}>
             <circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" strokeWidth="2" />
             <circle cx="20" cy="20" r="16" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="2,2" opacity="0.6" />
             <circle cx="20" cy="20" r="2" fill="currentColor" />
@@ -21,7 +21,13 @@ export default function BentoSectionTwo() {
               <line x1="7" y1="7" x2="18" y2="18" /> <line x1="33" y1="33" x2="22" y2="22" />
               <line x1="33" y1="7" x2="22" y2="18" /> <line x1="7" y1="33" x2="18" y2="22" />
             </g>
-          </svg>
+          </svg> */}
+          <Image
+            src="/logo-png.png"
+            alt="Logo  Sorawpub"
+            width={200}
+            height={200}
+          />
         </div>
 
         {/* 6. TESTO ORIZZONTALE */}

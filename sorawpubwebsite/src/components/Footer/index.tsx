@@ -18,7 +18,7 @@ export function Footer() {
                 <div className={styles.headerRow}>
                     <div className={styles.logoBlock}>
                         <h2 className={styles.logoText}>SO RAW</h2>
-                        <span className={styles.logoSub}>COCKTAIL & VIBES</span>
+                        <span className={styles.logoSub}>COCKTAIL & BAR</span>
                     </div>
                     <Link href="/prenota" className={styles.reserveBtn}>
                         Prenota Tavolo
@@ -39,7 +39,7 @@ export function Footer() {
                             {/* Riquadro Mappa Integrato */}
                             <div className={styles.miniMap}>
                                 <iframe 
-                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3143.238647764128!2d13.1189!3d38.0416!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzjCsDAyJzI5LjgiTiAxM8KwMDcnMDguMCJF!5e0!3m2!1sit!2sit!4v1600000000000!5m2!1sit!2sit" 
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d751.7507360299768!2d13.117405069601292!3d38.046824454374914!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x13198dae714cfb8f%3A0x6c0f24bd6be51665!2sPiazza%20Giuseppe%20Verdi%2C%2012%2C%2090047%20Partinico%20PA!5e1!3m2!1sit!2sit!4v1765817165049!5m2!1sit!2sit" 
                                     width="100%" 
                                     height="100%" 
                                     style={{ border: 0 }} 
@@ -49,7 +49,7 @@ export function Footer() {
                                 ></iframe>
                             </div>
                             <a 
-                                href="https://goo.gl/maps/..." 
+                                href="https://www.google.com/maps/dir//Piazza+Giuseppe+Verdi,+12,+90047+Partinico+PA" 
                                 target="_blank" 
                                 className={styles.mapLink}
                             >
@@ -81,14 +81,12 @@ export function Footer() {
                         <nav className={styles.navLinks}>
                             <Link href="/">Home</Link>
                             <Link href="/menu">Food & Drinks</Link>
-                            <Link href="/events">Eventi</Link>
-                            <Link href="/chi-siamo">Philosophy</Link>
                         </nav>
                         
                         <div className={styles.socialGroup}>
                             <h3 className={styles.colTitle}>Follow Us</h3>
                             <div className={styles.socialLinks}>
-                                <a href="#">Instagram</a>
+                                <a href="https://www.instagram.com/so_raw_cocktailbar/">Instagram</a>
                                 <a href="#">Facebook</a>
                             </div>
                         </div>
@@ -99,7 +97,7 @@ export function Footer() {
                 {/* BOTTOM BAR */}
                 <div className={styles.bottomRow}>
                     <p suppressHydrationWarning className={styles.copy}>
-                        © {year} So Raw Pub • P.IVA <span>123</span> <span>456</span> <span>789</span>
+                        © {year} So Raw Pub • P.IVA <span>0732</span> <span>6980</span> <span>823</span>
                     </p>
                     <p className={styles.credits}>
                         Dev by <a href="#">Gabriele Scamardo</a>
