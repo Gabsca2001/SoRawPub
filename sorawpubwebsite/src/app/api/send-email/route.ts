@@ -13,21 +13,27 @@ interface EmailPayload {
 
 export async function POST(request: Request) {
   try {
+    // --- DEBUG LOGS (Verifica variabili d'ambiente) ---
+    console.log("Tentativo invio email in corso...");
+    console.log("Check Variabili:");
+    console.log("- EMAIL_USER:", process.env.EMAIL_USER ? "OK (Presente)" : "❌ MANCANTE");
+    console.log("- EMAIL_PASS:", process.env.EMAIL_PASS ? "OK (Presente)" : "❌ MANCANTE");
+
     // 1. Leggi i dati dal corpo della richiesta
     const body: EmailPayload = await request.json();
     const { email, name, date, time, guests, status } = body;
 
     // 2. Controllo di sicurezza: Variabili d'ambiente
     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-      console.error("ERRORE: Variabili d'ambiente EMAIL_USER o EMAIL_PASS mancanti.");
-      return NextResponse.json({ error: 'Configurazione server incompleta' }, { status: 500 });
+      console.error("ERRORE CRITICO: Variabili d'ambiente mancanti.");
+      return NextResponse.json({ error: 'Configurazione server incompleta (Mancano credenziali)' }, { status: 500 });
     }
 
-    // 3. Configura il trasportatore per ALTERVISTA (SMTPS)
+    // 3. Configura il trasportatore per ARUBA (SMTPS)
     const transporter = nodemailer.createTransport({
-      host: "smtp.altervista.org",
-      port: 465, // Porta SSL sicura
-      secure: true, // True per la porta 465
+      host: "smtps.aruba.it", 
+      port: 465,            // Porta SSL sicura standard per Aruba
+      secure: true,         // Usa SSL
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
@@ -38,7 +44,7 @@ export async function POST(request: Request) {
     let subject = '';
     let htmlContent = '';
     
-    // Stile base per le email (CSS inline)
+    // Stile base per le email (CSS inline per compatibilità)
     const baseStyle = "font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333; line-height: 1.6;";
     const containerStyle = "max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;";
     
@@ -78,9 +84,9 @@ export async function POST(request: Request) {
             
             <p>Questo può accadere se siamo al completo o se c'è stato un imprevisto tecnico.</p>
             
-            <p style="background-color: #fff3cd; padding: 10px; border-radius: 5px; border-left: 4px solid #ffc107;">
-              📞 Ti invitiamo a contattarci telefonicamente o su WhatsApp per verificare altre disponibilità.
-            </p>
+            <div style="background-color: #fff3cd; padding: 10px; border-radius: 5px; border-left: 4px solid #ffc107; margin: 20px 0;">
+              <p style="margin: 0;">📞 Ti invitiamo a contattarci telefonicamente o su WhatsApp per verificare altre disponibilità.</p>
+            </div>
 
             <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
              <p style="font-size: 0.8em; color: #777; text-align: center;">
@@ -109,6 +115,7 @@ export async function POST(request: Request) {
 
   } catch (error: any) {
     console.error('ERRORE INVIO EMAIL:', error);
+    // Log più dettagliato per capire cosa non va
     return NextResponse.json(
       { error: 'Errore durante l\'invio dell\'email', details: error.message }, 
       { status: 500 }

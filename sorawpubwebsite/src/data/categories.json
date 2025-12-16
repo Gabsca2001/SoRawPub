@@ -1,8 +1,78 @@
 [
-  { "id": "cocktail", "label": "Cocktail" },
-  { "id": "wine", "label": "Vini" },
-  { "id": "food", "label": "Cibo" },
-  { "id": "soft_drink", "label": "Bibite" },
-  { "id": "beer", "label": "Birre" },
-  { "id": "bitter", "label": "Amari" }
+  {
+    "id": "drink",
+    "label": "Drink"
+  },
+  {
+    "id": "amari",
+    "label": "Amari"
+  },
+  {
+    "id": "vini",
+    "label": "Vini (Calici)"
+  },
+  {
+    "id": "vini-liquorosi",
+    "label": "Vini Liquorosi"
+  },
+  {
+    "id": "liquori",
+    "label": "Liquori"
+  },
+  {
+    "id": "birre-bottiglia",
+    "label": "Birre Bottiglia"
+  },
+  {
+    "id": "birre-torino",
+    "label": "Birre Torino"
+  },
+  {
+    "id": "birre-spina",
+    "label": "Birre Spina"
+  },
+  {
+    "id": "alessandro-di-camporeale",
+    "label": "Alessandro di Camporeale"
+  },
+  {
+    "id": "pellegrino",
+    "label": "Pellegrino"
+  },
+  {
+    "id": "bollicine",
+    "label": "Bollicine"
+  },
+  {
+    "id": "soft-drinks",
+    "label": "Soft Drinks"
+  },
+  {
+    "id": "antipasti-freddi",
+    "label": "Antipasti Freddi (Luna Fredda)"
+  },
+  {
+    "id": "antipasti-caldi",
+    "label": "Antipasti Caldi (Il fuoco della caccia)"
+  },
+  {
+    "id": "insalate",
+    "label": "Insalate (Il raccolto della notte)"
+  },
+  {
+    "id": "taglieri",
+    "label": "Taglieri (Prede e bottini)"
+  },
+  {
+    "id": "burger",
+    "label": "Burger (Preda Gourmet)"
+  },
+  {
+    "id": "pinse",
+    "label": "Selva di pinse"
+  },
+  {
+    "id": "dessert",
+    "label": "Dessert della dea"
+  }
 ]
