@@ -15,9 +15,6 @@ export async function POST(request: Request) {
   try {
     // --- DEBUG LOGS (Verifica variabili d'ambiente) ---
     console.log("Tentativo invio email in corso...");
-    console.log("Check Variabili:");
-    console.log("- EMAIL_USER:", process.env.EMAIL_USER ? "OK (Presente)" : "❌ MANCANTE");
-    console.log("- EMAIL_PASS:", process.env.EMAIL_PASS ? "OK (Presente)" : "❌ MANCANTE");
 
     // 1. Leggi i dati dal corpo della richiesta
     const body: EmailPayload = await request.json();
