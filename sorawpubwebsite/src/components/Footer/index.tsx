@@ -81,6 +81,7 @@ export function Footer() {
                         <nav className={styles.navLinks}>
                             <Link href="/">Home</Link>
                             <Link href="/menu">Food & Drinks</Link>
+                            <Link href="/wp-admin-login-so-raw">Staff Login</Link>
                         </nav>
                         
                         <div className={styles.socialGroup}>

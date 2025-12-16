@@ -9,7 +9,7 @@ $border: rgba($text-cream, 0.15); // Colore linee griglia
     background-color: $bg-dark;
     color: $text-cream;
     width: 100%;
-    // Altezza automatica ma con padding generoso
+    height: 100%;
     padding: 4rem 2rem 2rem 2rem; 
     border-top: 1px solid $border;
 }

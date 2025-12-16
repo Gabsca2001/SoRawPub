@@ -1,0 +1,8 @@
+[
+  { "id": "cocktail", "label": "Cocktail" },
+  { "id": "wine", "label": "Vini" },
+  { "id": "food", "label": "Cibo" },
+  { "id": "soft_drink", "label": "Bibite" },
+  { "id": "beer", "label": "Birre" },
+  { "id": "bitter", "label": "Amari" }
+]

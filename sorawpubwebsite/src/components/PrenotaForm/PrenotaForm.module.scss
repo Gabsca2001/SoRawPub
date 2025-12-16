@@ -231,3 +231,97 @@ $seventh: #3f815c;
     from { opacity: 0; transform: translateY(-5px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); // Sfondo scuro semitrasparente
+  z-index: 9999; // Molto alto per stare sopra a tutto
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(4px); // Effetto sfocatura sullo sfondo (molto elegante)
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modalContent {
+  background-color: #ffffff; // Sfondo del box bianco
+  color: #333333; // Testo scuro per leggibilità
+  padding: 2.5rem 2rem;
+  border-radius: 12px;
+  max-width: 450px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  position: relative;
+  animation: slideUp 0.3s ease-out;
+
+  // Se il tuo sito è in Dark Mode di default, assicurati che questo box resti leggibile
+  // o inverti i colori qui se preferisci un modal scuro.
+}
+
+.modalIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.modalTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #1a1a1a;
+}
+
+.modalText {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+  color: #4a4a4a;
+}
+
+.modalWarningBox {
+  background-color: #fff4e5; // Arancione/Giallo chiarissimo
+  border-left: 4px solid #ff9800; // Barra laterale arancione
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 2rem;
+  text-align: left;
+  
+  p {
+    font-size: 0.9rem;
+    color: #663c00;
+    margin: 0;
+    line-height: 1.4;
+  }
+}
+
+.modalCloseBtn {
+  background-color: #000; // O il colore primario del tuo brand
+  color: #fff;
+  border: none;
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: transform 0.2s, opacity 0.2s;
+
+  &:hover {
+    opacity: 0.8;
+    transform: scale(1.02);
+  }
+}
+
+// Animazioni
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
