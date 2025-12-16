@@ -21,3 +21,61 @@ runConfig:
   # See https://firebase.google.com/docs/app-hosting/configure#secret-parameters
   # - variable: MY_SECRET
   #   secret: mySecretRef
+
+# Environment variables
+env:
+  # --- FIREBASE CONFIGURATION (Necessari per Build e Runtime) ---
+  - variable: NEXT_PUBLIC_FIREBASE_API_KEY
+    value: "AIzaSyCeUDJeuPrT7DhqIYWhTpv7XYdeP1LHgNs"
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+    value: "sorawpub.firebaseapp.com"
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    value: "sorawpub"
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+    value: "sorawpub.firebasestorage.app"
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+    value: "178082230232"
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_FIREBASE_APP_ID
+    value: "1:178082230232:web:470ec4521f3644853b4cad"
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+    value: "G-TCCJJ7580K"
+    availability:
+      - BUILD
+      - RUNTIME
+
+  # --- EMAIL CONFIGURATION ---
+  - variable: EMAIL_USER
+    value: "postmaster@sorawcocktailbar.it"
+    availability:
+      - RUNTIME
+      - BUILD
+
+  - variable: EMAIL_PASS
+    value: "Francesco123."
+    availability:
+      - RUNTIME
+      - BUILD

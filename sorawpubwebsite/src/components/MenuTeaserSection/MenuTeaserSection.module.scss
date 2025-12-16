@@ -1,3 +1,5 @@
+@use "sass:color";
+
 $primary: #953513;
 $text-cream: #e0d5bb;
 $bg-dark: #001a13;
@@ -57,7 +59,8 @@ $bg-dark: #001a13;
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 
   &:hover {
-    background: lighten($primary, 5%);
+    background: color.adjust($primary, $lightness: 5%);
+    
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
     transform: translateY(-2px);
   }
