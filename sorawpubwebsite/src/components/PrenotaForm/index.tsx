@@ -165,7 +165,26 @@ export default function PrenotaForm() {
             // Se Firebase è bloccato, vincerà il timeoutPromise e lancerà l'errore
             await Promise.race([firebasePromise, timeoutPromise]);
 
-            console.log("Prenotazione salvata con successo!");
+            console.log("Prenotazione salvata con successo su Firebase!");
+
+            // --- 6. TRIGGER NOTIFICA TELEGRAM (API CALL) ---
+            // Chiamiamo l'API interna per notificare il proprietario
+            // Non usiamo 'await' qui per non far aspettare l'utente se l'API è lenta o fallisce
+            // La notifica parte in background
+            fetch('/api/send-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: cleanData.email,
+                    name: cleanData.name,
+                    date: cleanData.date,
+                    time: cleanData.timeSlot,
+                    guests: cleanData.guests,
+                    status: 'pending' // Questo dirà al server di mandare il messaggio Telegram
+                }),
+            }).catch(err => console.error("Errore notifica Telegram:", err));
+
+
             setStatus('success');
 
             // Reset form
