@@ -1,67 +1,31 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { collection, getDocs } from 'firebase/firestore'; // Import Firestore functions
-import { db } from '@/lib/firebase'; // Importa la tua istanza db
 import styles from './MenuSection.module.scss';
-
-// Importa il JSON delle categorie
 import categoriesData from '@/data/categories.json';
+import { MenuItem } from '@/lib/getMenu'; // Importiamo il tipo dal file lib
 
-// Definisci l'interfaccia per un elemento del menu (utile per TypeScript/chiarezza)
-interface MenuItem {
-  id: string;
-  category: string;
-  name: string;
-  price: string;
-  description: string;
-  image?: string | null;
+// Props attese dal server
+interface MenuSectionProps {
+  initialMenuItems: MenuItem[];
 }
 
-// Immagine di Default (Atmosfera)
 const DEFAULT_IMAGE = '/img44.jpg';
 
-export default function MenuSection() {
-  // Stato per i piatti scaricati da Firebase
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
-  
-  // Stato per il caricamento
-  const [loading, setLoading] = useState(true);
-
+export default function MenuSection({ initialMenuItems }: MenuSectionProps) {
   // Imposta la prima categoria del JSON come attiva di default
   const [activeCategory, setActiveCategory] = useState(categoriesData[0]?.id || '');
   
   const [previewImage, setPreviewImage] = useState(DEFAULT_IMAGE);
   const [mobileModalImg, setMobileModalImg] = useState<string | null>(null);
 
-  // --- FETCH DATI DA FIREBASE ---
-  useEffect(() => {
-    const fetchMenu = async () => {
-      try {
-        // Assicurati che la tua collezione su Firestore si chiami "menu"
-        // Se si chiama diversamente (es. "products"), cambia la stringa qui sotto
-        const querySnapshot = await getDocs(collection(db, "menu"));
-        
-        const fetchedData: MenuItem[] = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as MenuItem[];
-
-        setMenuItems(fetchedData);
-      } catch (error) {
-        console.error("Errore nel recupero del menu:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchMenu();
-  }, []);
-
-  // Filtra i piatti in base alla categoria attiva
-  const filteredItems = menuItems.filter(item => item.category === activeCategory);
+  // OTTIMIZZAZIONE: useMemo ricalcola il filtro solo se cambia la categoria o i dati.
+  // Non serve più useEffect o stati di loading, i dati sono già qui!
+  const filteredItems = useMemo(() => {
+    return initialMenuItems.filter(item => item.category === activeCategory);
+  }, [initialMenuItems, activeCategory]);
 
   const handleDesktopHover = (img: string | null | undefined) => {
     setPreviewImage(img || DEFAULT_IMAGE);
@@ -97,7 +61,7 @@ export default function MenuSection() {
             <h2>Il Menù</h2>
           </div>
 
-          {/* MENU CATEGORIE (Dal JSON) */}
+          {/* MENU CATEGORIE */}
           <div className={styles.categoryWrapper}>
             {categoriesData.map((cat) => (
               <button
@@ -112,10 +76,7 @@ export default function MenuSection() {
 
           {/* LISTA PIATTI */}
           <div className={styles.menuList}>
-            {loading ? (
-              // Semplice stato di loading
-              <p style={{ padding: '20px', color: '#888' }}>Caricamento menu in corso...</p>
-            ) : filteredItems.length > 0 ? (
+            {filteredItems.length > 0 ? (
               filteredItems.map((item) => (
                 <div
                   key={item.id}
@@ -146,7 +107,6 @@ export default function MenuSection() {
                 </div>
               ))
             ) : (
-              // Messaggio se la categoria è vuota
               <p style={{ padding: '20px', fontStyle: 'italic', opacity: 0.6 }}>
                 Nessun elemento in questa sezione.
               </p>
@@ -160,13 +120,13 @@ export default function MenuSection() {
         <div className={styles.rightColumn}>
           <div className={styles.imageFrame}>
             <Image
-              key={previewImage} // Key forza il re-render per l'animazione se presente nel CSS
+              key={previewImage} // Key forza l'animazione al cambio immagine
               src={previewImage}
               alt="Menu Preview"
               fill
               className={styles.previewImg}
-              priority
-              style={{ objectFit: 'cover' }} // Assicura che l'immagine copra bene l'area
+              priority={true} // Carica subito l'immagine principale
+              style={{ objectFit: 'cover' }}
             />
             <div className={styles.overlayGradient}></div>
           </div>

@@ -8,7 +8,7 @@ import styles from './PrenotaForm.module.scss';
 // Struttura dati
 interface ReservationData {
     date: string;
-    guests: string;
+    guests: number;
     timeSlot: string;
     name: string;
     phone: string;
@@ -32,7 +32,7 @@ export default function PrenotaForm() {
     // Stato Dati
     const [formData, setFormData] = useState<ReservationData>({
         date: today,
-        guests: '2',
+        guests: 2,
         timeSlot: '',
         name: '',
         phone: '',
@@ -107,6 +107,17 @@ export default function PrenotaForm() {
         }));
     };
 
+    const incrementGuests = () => {
+        setFormData(prev => ({ ...prev, guests: prev.guests + 1 }));
+    };
+
+    const decrementGuests = () => {
+        setFormData(prev => ({
+            ...prev,
+            guests: prev.guests > 1 ? prev.guests - 1 : 1
+        }));
+    };
+
     const handleCloseModal = () => {
         setShowModal(false);
         // Opzionale: resettare lo status a 'idle' se vuoi permettere un nuovo invio immediato
@@ -120,7 +131,7 @@ export default function PrenotaForm() {
         // 1. Sanitizzazione
         const cleanData: ReservationData = {
             date: formData.date,
-            guests: sanitizeInput(formData.guests),
+            guests: formData.guests,
             timeSlot: sanitizeInput(formData.timeSlot),
             name: sanitizeInput(formData.name),
             phone: sanitizeInput(formData.phone),
@@ -140,12 +151,15 @@ export default function PrenotaForm() {
                 setTimeout(() => reject(new Error("Timeout: Il server non risponde. Controlla la tua connessione internet o firewall.")), 10000)
             );
 
-            // 4. La chiamata reale a Firebase
-            const firebasePromise = addDoc(collection(db, "prenotazioni"), {
+            const firebaseData = {
                 ...cleanData,
+                guests: String(cleanData.guests), // Salva come stringa su Firebase
                 createdAt: serverTimestamp(),
                 status: 'pending'
-            });
+            };
+
+            // 4. La chiamata reale a Firebase
+            const firebasePromise = addDoc(collection(db, "prenotazioni"), firebaseData);
 
             // 5. Gara: chi finisce prima vince via Promise.race
             // Se Firebase è bloccato, vincerà il timeoutPromise e lancerà l'errore
@@ -157,7 +171,7 @@ export default function PrenotaForm() {
             // Reset form
             setFormData({
                 date: today,
-                guests: '2',
+                guests: 2,
                 timeSlot: '',
                 name: '',
                 phone: '',
@@ -213,19 +227,30 @@ export default function PrenotaForm() {
                         </div>
 
                         <div className={styles.inputGroup}>
-                            <label htmlFor="guests">Ospiti *</label>
-                            <select
-                                id="guests"
-                                name="guests"
-                                value={formData.guests}
-                                onChange={handleChange}
-                                required
-                            >
-                                {[...Array(8)].map((_, i) => (
-                                    <option key={i} value={String(i + 1)}>{i + 1} Persone</option>
-                                ))}
-                                <option value="more">8+ (Contattaci)</option>
-                            </select>
+                            <label>Ospiti *</label>
+                            <div className={styles.guestCounter}>
+                                <button
+                                    type="button"
+                                    className={styles.counterBtn}
+                                    onClick={decrementGuests}
+                                    disabled={formData.guests <= 1}
+                                >
+                                    -
+                                </button>
+                                <span className={styles.guestValue}>
+                                    {formData.guests} {formData.guests === 1 ? 'Persona' : 'Persone'}
+                                </span>
+                                <button
+                                    type="button"
+                                    className={styles.counterBtn}
+                                    onClick={incrementGuests}
+                                >
+                                    +
+                                </button>
+                            </div>
+                            {formData.guests > 8 && (
+                                <span className={styles.infoText}>Per gruppi numerosi contattaci.</span>
+                            )}
                         </div>
                     </div>
 

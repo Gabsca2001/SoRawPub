@@ -129,6 +129,46 @@ $seventh: #3f815c;
     }
 }
 
+.guestCounter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba($fourth, 0.3);
+    padding: 0.4rem 0;
+    
+    .counterBtn {
+        background: transparent;
+        border: 1px solid rgba($fourth, 0.3);
+        color: $fourth;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover:not(:disabled) {
+            border-color: $primary;
+            color: $primary;
+            background: rgba($primary, 0.1);
+        }
+
+        &:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+    }
+
+    .guestValue {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: $fourth;
+    }
+}
+
 // --- Slot Orari (Radio Button personalizzati) ---
 .slotsContainer {
     display: flex;
