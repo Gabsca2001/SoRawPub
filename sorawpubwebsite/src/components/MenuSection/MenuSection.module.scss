@@ -1,31 +1,33 @@
+// import sass color
+@use 'sass:color';
+
 $primary: #953513;
 $text-cream: #e0d5bb;
 $bg-dark: #001a13;
 $gold: #a48d29;
 $secondary: #b75b39;
 
+// --- LAYOUT GENERALE ---
 .menuSection {
   background-color: $bg-dark;
   color: $text-cream;
   width: 100%;
-  height: 100vh;        // pagina di menu a tutta altezza
+  height: 100vh;
   position: relative;
-  overflow: hidden;     // niente scroll sul container: scrolliamo dentro la colonna sinistra
+  overflow: hidden;
 
   @media (max-width: 1024px) {
     padding: 0.5rem;
     margin: 0;
   }
-
 }
 
-// LAYOUT A DUE COLONNE
 .splitLayout {
   display: flex;
   width: 100%;
   height: 100%;
-  padding: 0 2rem;      // 🔥 meno margine esterno rispetto ai 4rem di prima
-  gap: 2rem;            // 🔥 spazio tra colonna sinistra e destra
+  padding: 0 2rem;
+  gap: 2rem;
 
   @media (max-width: 1024px) {
     padding: 0;
@@ -37,11 +39,12 @@ $secondary: #b75b39;
 .leftColumn {
   width: 55%;
   height: 100%;
-  overflow-y: auto;      // 🔥 QUI ora lo scrolla il menu!
-  padding: 0 0 2.5rem 0;
+  overflow-y: auto; // Scrolla la pagina principale
+  padding: 0 0 5rem 0; // Padding extra in fondo per non coprire contenuti col tasto galleggiante
   position: relative;
   z-index: 2;
 
+  // Scrollbar custom per Desktop
   &::-webkit-scrollbar {
     width: 2px;
   }
@@ -59,14 +62,66 @@ $secondary: #b75b39;
     width: 100%;
     height: auto;
     -webkit-overflow-scrolling: touch;
+    padding-bottom: 6rem; // Più spazio su mobile per il bottone flottante
   }
 }
 
-// --- HEADER ---
+// --- HEADER E NAVIGATION ---
+.mobileHeaderRow {
+  padding-top: 2rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: flex-start;
+
+  @media (max-width: 1024px) {
+    padding-top: 1.5rem;
+  }
+}
+
+// 🔥 TASTO MENU GALLEGGIANTE (FLOATING BUTTON) 🔥
+.mobileMenuToggle {
+  display: none; // Nascosto su desktop
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 90; // Sopra a tutto il contenuto normale
+
+  background-color: $primary;
+  color: #fff;
+  border: none;
+  padding: 0.8rem 1.8rem;
+  border-radius: 50px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6); // Ombra marcata
+
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  &:active {
+    transform: translateX(-50%) scale(0.95);
+    background-color: darken($primary, 5%);
+  }
+
+  @media (max-width: 1024px) {
+    display: flex;
+  }
+}
+
 .header {
   text-align: center;
   margin-bottom: 1.5rem;
-  padding-top: 4rem; // spazio dalla navbar
+  padding-top: 2rem;
 
   .subtitle {
     font-size: 0.85rem;
@@ -91,22 +146,125 @@ $secondary: #b75b39;
   }
 }
 
-// --- CATEGORY TABS ---
+// --- SISTEMA MENU LATERALE (DRAWER) ---
+
+.categoryContainer {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: $bg-dark;
+  padding: 1rem 0;
+
+  @media (max-width: 1024px) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: transparent;
+    pointer-events: none;
+    padding: 0;
+
+    &.open {
+      pointer-events: all;
+    }
+  }
+}
+
+.backdrop {
+  display: none;
+
+  @media (max-width: 1024px) {
+    display: block;
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    opacity: 0;
+    transition: opacity 0.3s;
+
+    .categoryContainer.open & {
+      opacity: 1;
+    }
+  }
+}
+
+// IL CASSETTO LATERALE
+.categorySidebar {
+  width: 100%;
+
+  @media (max-width: 1024px) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 80%;
+    max-width: 320px;
+    background: color.adjust($bg-dark, $alpha: 0.95);
+    border-radius: 0 24px 24px 0;
+    border-right: 1px solid rgba($text-cream, 0.1);
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+
+    .categoryContainer.open & {
+      transform: translateX(0);
+    }
+  }
+}
+
+// Header del cassetto (Fisso in alto)
+.sidebarHeader {
+  display: none;
+
+  @media (max-width: 1024px) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    border-bottom: 1px solid rgba($text-cream, 0.05);
+    flex-shrink: 0; // Non si rimpicciolisce mai
+
+    h3 {
+      margin: 0;
+      font-family: var(--font-nunito);
+      font-size: 2rem;
+      color: $text-cream;
+    }
+
+    .closeMenuBtn {
+      background: rgba(255, 255, 255, 0.05); // Sfondo leggero al bottone X
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      border: none;
+      color: $text-cream;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+
+      &:active {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      svg {
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+}
+
+// Lista delle categorie (Scrollabile)
 .categoryWrapper {
   display: flex;
   gap: 0.8rem;
-  margin-bottom: 2rem;
   flex-wrap: nowrap;
   overflow-x: auto;
-
-  position: sticky;
-  top: 0;               // attaccato in alto alla colonna sinistra
-  z-index: 20;
-  background: $bg-dark;
-
-  // niente più margini negativi: usiamo i 2rem di padding di .splitLayout
-  padding: 1rem 0;
-  border-bottom: 1px solid rgba($text-cream, 0.1);
   scrollbar-width: none;
 
   &::-webkit-scrollbar {
@@ -114,12 +272,19 @@ $secondary: #b75b39;
   }
 
   @media (max-width: 1024px) {
-    padding: 1rem 0;
-    top: 0;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+    flex: 1; // Prende tutto lo spazio rimanente sotto l'header
+
+    gap: 0.8rem;
+    padding: 1.5rem; // Padding uniforme attorno ai bottoni
+    padding-bottom: 6rem;
   }
 }
 
 .categoryBtn {
+  // Desktop Style
   background: transparent;
   border: 1px solid rgba($text-cream, 0.35);
   color: rgba($text-cream, 0.85);
@@ -145,8 +310,40 @@ $secondary: #b75b39;
     color: white;
     box-shadow: 0 4px 15px rgba($primary, 0.4);
   }
+
+  // Mobile Style (dentro il cassetto)
+  @media (max-width: 1024px) {
+    width: 100%;
+    text-align: left;
+    padding: 1.2rem 0;
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid rgba($text-cream, 0.1);
+    font-size: 1.1rem;
+    text-transform: none; // Più elegante in lista
+
+    white-space: normal; // Permette al testo di andare a capo
+    line-height: 1.4; // Migliora la leggibilità su due righe
+    height: auto; // Permette al bottone di allungarsi
+    display: block;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &.active {
+      background: transparent;
+      color: $primary;
+      border-color: rgba($text-cream, 0.1);
+      box-shadow: none;
+      padding-left: 10px;
+      border-left: 3px solid $primary;
+      font-weight: 700;
+    }
+  }
 }
 
+// --- LISTA PIATTI (ITEMS) ---
 .menuList {
   display: flex;
   flex-direction: column;
@@ -164,8 +361,14 @@ $secondary: #b75b39;
   @media (hover: hover) {
     &:hover {
       background: rgba(255, 255, 255, 0.03);
-      .itemName { color: $gold; }
-      .line { opacity: 0.5; }
+
+      .itemName {
+        color: $gold;
+      }
+
+      .line {
+        opacity: 0.5;
+      }
     }
   }
 
@@ -260,6 +463,44 @@ $secondary: #b75b39;
   height: 60px;
 }
 
+// --- INTESTATZIONE CATEGORIA ATTIVA (Reminder) ---
+.currentCategoryTitle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  animation: fadeIn 0.5s ease-out; // Animazione delicata all'apparizione
+
+  h3 {
+    font-family: var(--font-nunito);
+    font-size: 1.8rem;
+    color: $primary; // Colore arancione/ruggine
+    margin: 0;
+    text-transform: capitalize;
+    font-weight: 400;
+    letter-spacing: 1px;
+  }
+
+  .decoLine {
+    height: 1px;
+    width: 30px; // Lunghezza della linea decorativa
+    background-color: rgba($text-cream, 0.3);
+  }
+
+  @media (max-width: 768px) {
+    margin-bottom: 1.5rem;
+
+    h3 {
+      font-size: 1.5rem;
+    }
+
+    .decoLine {
+      width: 20px;
+    }
+  }
+}
+
 // --- COLONNA DESTRA (Preview) ---
 .rightColumn {
   width: 45%;
@@ -290,7 +531,7 @@ $secondary: #b75b39;
   }
 }
 
-// --- MODAL MOBILE ---
+// --- MODALE E BOTTONE BACK ---
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -343,15 +584,6 @@ $secondary: #b75b39;
   margin-top: 1rem;
 }
 
-.backRow {
-  padding-top: 2rem;
-  margin-bottom: 0.5rem;
-
-  @media (max-width: 1024px) {
-    padding-top: 1.5rem;
-  }
-}
-
 .backButton {
   display: inline-flex;
   align-items: center;
@@ -386,18 +618,35 @@ $secondary: #b75b39;
   }
 }
 
-
+// --- ANIMAZIONI ---
 @keyframes fadeImg {
-  from { opacity: 0; transform: scale(1.05); }
-  to   { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes zoomPulse {
-  from { transform: scale(1); }
-  to   { transform: scale(1.05); }
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(1.05);
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }

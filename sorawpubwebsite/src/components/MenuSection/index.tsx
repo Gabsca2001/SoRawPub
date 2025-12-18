@@ -5,9 +5,24 @@ import Image from 'next/image';
 import Link from 'next/link';
 import styles from './MenuSection.module.scss';
 import categoriesData from '@/data/categories.json';
-import { MenuItem } from '@/lib/getMenu'; // Importiamo il tipo dal file lib
+import { MenuItem } from '@/lib/getMenu';
 
-// Props attese dal server
+// Icone SVG leggere per Menu e Chiudi
+const IconMenu = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="3" y1="12" x2="21" y2="12" />
+    <line x1="3" y1="6" x2="21" y2="6" />
+    <line x1="3" y1="18" x2="21" y2="18" />
+  </svg>
+);
+
+const IconClose = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);
+
 interface MenuSectionProps {
   initialMenuItems: MenuItem[];
 }
@@ -15,18 +30,18 @@ interface MenuSectionProps {
 const DEFAULT_IMAGE = '/img44.jpg';
 
 export default function MenuSection({ initialMenuItems }: MenuSectionProps) {
-  // Imposta la prima categoria del JSON come attiva di default
+  // Stati
   const [activeCategory, setActiveCategory] = useState(categoriesData[0]?.id || '');
-  
   const [previewImage, setPreviewImage] = useState(DEFAULT_IMAGE);
   const [mobileModalImg, setMobileModalImg] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // OTTIMIZZAZIONE: useMemo ricalcola il filtro solo se cambia la categoria o i dati.
-  // Non serve più useEffect o stati di loading, i dati sono già qui!
+  // Filtro Dati (Cache)
   const filteredItems = useMemo(() => {
-    return initialMenuItems.filter(item => item.category === activeCategory);
+    return initialMenuItems.filter((item) => item.category === activeCategory);
   }, [initialMenuItems, activeCategory]);
 
+  // Handlers
   const handleDesktopHover = (img: string | null | undefined) => {
     setPreviewImage(img || DEFAULT_IMAGE);
   };
@@ -37,15 +52,26 @@ export default function MenuSection({ initialMenuItems }: MenuSectionProps) {
     }
   };
 
+  const handleCategorySelect = (id: string) => {
+    setActiveCategory(id);
+    setIsMobileMenuOpen(false); // Chiude il menu dopo il click su mobile
+    
+    // Opzionale: scrolla in alto la lista piatti quando cambi categoria
+    const listElement = document.getElementById('menu-list-container');
+    if(listElement) listElement.scrollTop = 0;
+  };
+
+  const activeCategoryLabel = categoriesData.find(c => c.id === activeCategory)?.label;
+
   return (
     <section className={styles.menuSection} id="menu">
       <div className={styles.splitLayout}>
-
-        {/* COLONNA SINISTRA */}
-        <div className={styles.leftColumn}>
-
-          {/* pulsante back */}
-          <div className={styles.backRow}>
+        
+        {/* --- COLONNA SINISTRA (Contenuto Scrollabile) --- */}
+        <div className={styles.leftColumn} id="menu-list-container">
+          
+          {/* Header Mobile: Solo pulsante Back */}
+          <div className={styles.mobileHeaderRow}>
             <Link href="/" className={styles.backButton}>
               <span className={styles.backIcon}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -56,25 +82,58 @@ export default function MenuSection({ initialMenuItems }: MenuSectionProps) {
             </Link>
           </div>
 
+          {/* 🔥 TASTO MENU GALLEGGIANTE (Fisso in basso) 🔥 */}
+          <button 
+            className={styles.mobileMenuToggle} 
+            onClick={() => setIsMobileMenuOpen(true)}
+          >
+            <IconMenu /> <span>Menu</span>
+          </button>
+
+          {/* Titolo Sezione */}
           <div className={styles.header}>
             <span className={styles.subtitle}>Taste Experience</span>
             <h2>Il Menù</h2>
           </div>
 
-          {/* MENU CATEGORIE */}
-          <div className={styles.categoryWrapper}>
-            {categoriesData.map((cat) => (
-              <button
-                key={cat.id}
-                className={`${styles.categoryBtn} ${activeCategory === cat.id ? styles.active : ''}`}
-                onClick={() => setActiveCategory(cat.id)}
-              >
-                {cat.label}
-              </button>
-            ))}
+          {/* --- MENU CATEGORIE (DRAWER LATERALE) --- */}
+          <div className={`${styles.categoryContainer} ${isMobileMenuOpen ? styles.open : ''}`}>
+            
+            {/* Sfondo scuro cliccabile */}
+            <div className={styles.backdrop} onClick={() => setIsMobileMenuOpen(false)}></div>
+
+            {/* Pannello Laterale */}
+            <div className={styles.categorySidebar}>
+                {/* Header interno al cassetto */}
+                <div className={styles.sidebarHeader}>
+                    <h3>Categorie</h3>
+                    <button onClick={() => setIsMobileMenuOpen(false)} className={styles.closeMenuBtn}>
+                        <IconClose />
+                    </button>
+                </div>
+
+                {/* Lista Categorie Scrollabile */}
+                <div className={styles.categoryWrapper}>
+                    {categoriesData.map((cat) => (
+                    <button
+                        key={cat.id}
+                        className={`${styles.categoryBtn} ${activeCategory === cat.id ? styles.active : ''}`}
+                        onClick={() => handleCategorySelect(cat.id)}
+                    >
+                        {cat.label}
+                    </button>
+                    ))}
+                </div>
+            </div>
           </div>
 
-          {/* LISTA PIATTI */}
+          <div className={styles.currentCategoryTitle}>
+             <span className={styles.decoLine}></span>
+             <h3>{activeCategoryLabel}</h3>
+             <span className={styles.decoLine}></span>
+          </div>
+
+          {/* --- LISTA PIATTI --- */}
           <div className={styles.menuList}>
             {filteredItems.length > 0 ? (
               filteredItems.map((item) => (
@@ -97,11 +156,9 @@ export default function MenuSection({ initialMenuItems }: MenuSectionProps) {
                           </span>
                         )}
                       </div>
-
                       <span className={styles.line}></span>
                       <span className={styles.price}>€ {item.price}</span>
                     </div>
-
                     <p className={styles.description}>{item.description}</p>
                   </div>
                 </div>
@@ -111,21 +168,21 @@ export default function MenuSection({ initialMenuItems }: MenuSectionProps) {
                 Nessun elemento in questa sezione.
               </p>
             )}
-
+            
             <div className={styles.spacer}></div>
           </div>
         </div>
 
-        {/* COLONNA DESTRA (Immagine Preview) */}
+        {/* --- COLONNA DESTRA (Preview Desktop) --- */}
         <div className={styles.rightColumn}>
           <div className={styles.imageFrame}>
             <Image
-              key={previewImage} // Key forza l'animazione al cambio immagine
+              key={previewImage}
               src={previewImage}
               alt="Menu Preview"
               fill
               className={styles.previewImg}
-              priority={true} // Carica subito l'immagine principale
+              priority={true}
               style={{ objectFit: 'cover' }}
             />
             <div className={styles.overlayGradient}></div>
@@ -134,7 +191,7 @@ export default function MenuSection({ initialMenuItems }: MenuSectionProps) {
 
       </div>
 
-      {/* MODALE MOBILE */}
+      {/* --- MODALE FOTO (Solo Mobile) --- */}
       {mobileModalImg && (
         <div className={styles.modalOverlay} onClick={() => setMobileModalImg(null)}>
           <div className={styles.modalContent}>
@@ -143,7 +200,7 @@ export default function MenuSection({ initialMenuItems }: MenuSectionProps) {
               alt="Detail" 
               fill 
               className={styles.modalImg} 
-              style={{ objectFit: 'cover' }}
+              style={{ objectFit: 'cover' }} 
             />
             <button className={styles.closeBtn}>✕</button>
           </div>
