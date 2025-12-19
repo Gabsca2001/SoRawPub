@@ -19,7 +19,7 @@ export default function AdminDashboard() {
 
   // Protezione Rotta
   useEffect(() => {
-    if (!loading && !user) router.push('/login');
+    if (!loading && !user) router.push('/wp-admin-login-so-raw');
   }, [user, loading, router]);
 
   if (loading || !user) return <div className={styles.loadingScreen}>Loading...</div>;

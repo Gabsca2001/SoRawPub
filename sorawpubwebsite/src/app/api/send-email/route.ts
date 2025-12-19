@@ -31,7 +31,7 @@ async function sendTelegramNotification(name: string, date: string, time: string
 📅 <b>Quando:</b> ${date} alle ${time}
 
 🔒 <i>Dati di contatto protetti.</i>
-👉 <a href="https://sorawcocktail.it/admin">CLICCA QUI PER GESTIRE</a>
+👉 <a href="https://sorawcocktailbar.it/wp-admin-login-so-raw">CLICCA QUI PER GESTIRE</a>
   `;
 
   try {

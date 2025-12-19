@@ -69,13 +69,13 @@ env:
 
   # --- EMAIL CONFIGURATION ---
   - variable: EMAIL_USER
-    value: "postmaster@sorawcocktailbar.it"
+    value: "info@sorawcocktailbar.it"
     availability:
       - RUNTIME
       - BUILD
 
   - variable: EMAIL_PASS
-    value: "Francesco123."
+    value: "7p67bt4.JNr1PE#"
     availability:
       - RUNTIME
       - BUILD

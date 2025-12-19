@@ -16,7 +16,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    if (user) router.push('/admin');
+    if (user) router.push('/dashboard-panel');
   }, [user, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {

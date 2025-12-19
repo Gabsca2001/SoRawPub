@@ -49,7 +49,7 @@ export default function PrenotaForm() {
     const [showModal, setShowModal] = useState(false);
 
     const timeSlots: string[] = [
-        '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00', '22:30'
+        '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00', '22:30', '23:00', '23:30'
     ];
 
     // --- 1. FUNZIONE DI SANITIZZAZIONE ---
