@@ -7,11 +7,11 @@ import styles from './login.module.scss';
 export default function LoginPage() {
   const { user, login, loading } = useAuth();
   const router = useRouter();
-  
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  
+
   // NUOVO STATO: Gestisce la visibilità della password
   const [showPassword, setShowPassword] = useState(false);
 
@@ -22,13 +22,27 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    // DEBUG: Verifichiamo che il click funzioni e i dati ci siano
+    console.log("Tentativo di login in corso con email:", email);
+
     try {
       await login(email, password);
+      // Se arrivi qui, il login ha funzionato
+      console.log("Login effettuato con successo!");
     } catch (err: any) {
+      // --- QUI C'È LA MAGIA ---
+      // Stampiamo l'oggetto errore completo per vedere cosa succede davvero
+      console.error("Dettagli completi errore:", err);
+      console.log("Codice errore:", err.code);
+      console.log("Messaggio errore:", err.message);
+      // ------------------------
+
       if (err.code === 'auth/invalid-credential') {
         setError('Email o password errati.');
       } else {
-        setError('Si è verificato un errore.');
+        // Aggiungiamo il messaggio tecnico all'errore visibile per aiutarti subito
+        setError(`Si è verificato un errore: ${err.message || 'Sconosciuto'}`);
       }
     }
   };
@@ -43,28 +57,28 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.inputGroup}>
-            <input 
-              type="email" 
-              placeholder="Email" 
+            <input
+              type="email"
+              placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
-          
+
           {/* Wrapper per Input Password + Occhio */}
           <div className={styles.inputGroup}>
             <div className={styles.passwordWrapper}>
-              <input 
+              <input
                 // Cambia tipo dinamicamente
-                type={showPassword ? 'text' : 'password'} 
-                placeholder="Password" 
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-              
-              <button 
+
+              <button
                 type="button" // Importante: evita il submit del form
                 className={styles.eyeBtn}
                 onClick={() => setShowPassword(!showPassword)}

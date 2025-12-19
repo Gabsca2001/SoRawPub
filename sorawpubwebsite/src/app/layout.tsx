@@ -3,13 +3,15 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
 
+// 1. IMPORTANTE: Importiamo l'AuthProvider
+import { AuthProvider } from '@/context/AuthContext'; 
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.sorawcocktailbar.it'),
   title: "SO RAW Cocktail Bar",
   description: "So Raw Pub, pub a Partinico Via Giuseppe Verdi n.12, specializzato in cocktail, birre e cibo di qualità. Vieni a trovarci!",
-
   openGraph: {
     title: "SO RAW Cocktail Bar",
     description: "So Raw Pub, pub a Partinico. Cocktail, birre e cibo di qualità.",
@@ -17,7 +19,7 @@ export const metadata: Metadata = {
     siteName: 'SO RAW',
     images: [
       {
-        url: '/logo-png.png', // <--- Il nome del file che hai messo in /public
+        url: '/logo-png.png',
         width: 1200,
         height: 630,
         alt: 'SO RAW Cocktail Bar - Partinico',
@@ -26,12 +28,11 @@ export const metadata: Metadata = {
     locale: 'it_IT',
     type: 'website',
   },
-
   twitter: {
     card: 'summary_large_image',
     title: "SO RAW Cocktail Bar",
     description: "So Raw Pub, pub a Partinico. Cocktail, birre e cibo di qualità.",
-    images: ['/logo-png.png'], // <--- Stessa immagine
+    images: ['/logo-png.png'],
   },
 };
 
@@ -43,14 +44,13 @@ export default function RootLayout({
   return (
     <html lang="it">
       <head>
-        {/* --- 1. CONFIGURAZIONE IUBENDA (Con i tuoi ID corretti) --- */}
         <Script id="iubenda-cs-config" strategy="beforeInteractive">
           {`
             var _iub = _iub || [];
             _iub.csConfiguration = {
               "lang": "it",
-              "siteId": 4360918,        /* <--- IL TUO SITE ID */
-              "cookiePolicyId": 96160872, /* <--- IL TUO POLICY ID */
+              "siteId": 4360918,
+              "cookiePolicyId": 96160872,
               "banner": { 
                 "position": "float-bottom-center", 
                 "acceptButtonDisplay": true, 
@@ -60,8 +60,6 @@ export default function RootLayout({
             };
           `}
         </Script>
-
-        {/* --- 2. CARICAMENTO SCRIPT BANNER --- */}
         <Script 
           src="//cdn.iubenda.com/cs/iubenda_cs.js" 
           strategy="afterInteractive" 
@@ -69,7 +67,10 @@ export default function RootLayout({
       </head>
       
       <body className={inter.className}>
-        {children}
+        {/* 2. IMPORTANTE: Avvolgiamo tutto l'app nel Provider */}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
