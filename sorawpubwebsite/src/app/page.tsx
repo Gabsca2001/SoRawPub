@@ -7,8 +7,6 @@ import styles from './Home.module.scss';
 import { Footer } from "@/components/Footer";
 import GallerySection from '@/components/GallerySection';
 import MenuTeaserSection from "@/components/MenuTeaserSection";
-// ⛔️ Non usiamo più il MenuSection qui
-// import MenuSection from '@/components/MenuSection';
 
 export default function IndexPage() {
     return (
